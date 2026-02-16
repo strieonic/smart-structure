@@ -1,0 +1,317 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ENGINEER
+  ADMIN
+}
+
+enum SoilType {
+  CLAY
+  BLACK_COTTON
+  LATERITE
+  SANDY
+  ROCKY
+  ALLUVIAL
+}
+
+enum SeismicZone {
+  ZONE_II
+  ZONE_III
+  ZONE_IV
+  ZONE_V
+}
+
+enum FloodRisk {
+  LOW
+  MEDIUM
+  HIGH
+  VERY_HIGH
+}
+
+enum BuildingType {
+  RESIDENTIAL
+  COMMERCIAL
+  HOSPITAL
+  SCHOOL
+  INDUSTRIAL
+  MIXED_USE
+}
+
+enum StructuralSystem {
+  RCC
+  STEEL
+  COMPOSITE
+  LOAD_BEARING
+}
+
+enum Orientation {
+  NORTH
+  NORTH_EAST
+  EAST
+  SOUTH_EAST
+  SOUTH
+  SOUTH_WEST
+  WEST
+  NORTH_WEST
+}
+
+enum FoundationType {
+  SHALLOW
+  DEEP_PILE
+  RAFT
+  COMBINED
+}
+
+enum HeightCategory {
+  LOW_RISE
+  MID_RISE
+  HIGH_RISE
+  SUPER_HIGH_RISE
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String
+  name          String
+  role          UserRole @default(USER)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  landSurveys   LandSurvey[]
+  auditLogs     AuditLog[]
+  
+  @@index([email])
+  @@map("users")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String
+  action      String
+  resource    String
+  details     Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, createdAt])
+  @@map("audit_logs")
+}
+
+model LandSurvey {
+  id                    String      @id @default(uuid())
+  userId                String
+  
+  // Location Data
+  latitude              Float
+  longitude             Float
+  plotArea              Float       // in sq.m
+  
+  // Soil & Terrain
+  soilType              SoilType
+  slope                 Float       // in degrees
+  elevation             Float       // in meters
+  waterTableDepth       Float       // in meters
+  
+  // Disaster Risk
+  seismicZone           SeismicZone
+  floodRisk             FloodRisk
+  nearbyWaterBodies     Boolean     @default(false)
+  waterBodyDistance     Float?      // in meters
+  historicalDisasters   Json?       // Array of past disasters
+  
+  // Climate Data
+  averageRainfall       Float?      // mm/year
+  maxTemperature        Float?      // Celsius
+  minTemperature        Float?      // Celsius
+  
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  
+  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  buildingInputs        BuildingInput[]
+  
+  @@index([userId])
+  @@index([seismicZone, floodRisk])
+  @@map("land_surveys")
+}
+
+model BuildingInput {
+  id                  String            @id @default(uuid())
+  landSurveyId        String
+  
+  // Building Specifications
+  buildingType        BuildingType
+  totalFloors         Int
+  floorHeight         Float             // in meters
+  totalHeight         Float             // in meters
+  builtUpArea         Float             // in sq.m
+  orientation         Orientation
+  structuralSystem    StructuralSystem
+  
+  // Additional Details
+  basementFloors      Int               @default(0)
+  parkingFloors       Int               @default(0)
+  expectedOccupancy   Int?
+  
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  
+  landSurvey          LandSurvey        @relation(fields: [landSurveyId], references: [id], onDelete: Cascade)
+  windData            WindData?
+  disasterAnalysis    DisasterAnalysis?
+  vastuReport         VastuReport?
+  finalReport         FinalReport?
+  
+  @@index([landSurveyId])
+  @@map("building_inputs")
+}
+
+model WindData {
+  id                    String   @id @default(uuid())
+  buildingInputId       String   @unique
+  
+  // Wind Parameters
+  windDirection         Float    // in degrees (0-360)
+  averageWindSpeed      Float    // in m/s
+  peakGustSpeed         Float    // in m/s
+  terrainRoughness      String   // Category 1-4
+  
+  // Calculated Values
+  windPressure          Float    // in kN/m²
+  windLoad              Float    // in kN
+  
+  // Recommendations
+  optimalOrientation    Orientation
+  aerodynamicForm       String
+  ventilationStrategy   Json
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  buildingInput         BuildingInput @relation(fields: [buildingInputId], references: [id], onDelete: Cascade)
+  
+  @@map("wind_data")
+}
+
+model DisasterAnalysis {
+  id                      String   @id @default(uuid())
+  buildingInputId         String   @unique
+  
+  // Load Calculations
+  deadLoad                Float    // in kN
+  liveLoad                Float    // in kN
+  windLoad                Float    // in kN
+  seismicLoad             Float    // in kN
+  totalLoad               Float    // in kN
+  
+  // Height Classification
+  heightCategory          HeightCategory
+  
+  // Foundation Recommendation
+  recommendedFoundation   FoundationType
+  foundationDepth         Float    // in meters
+  
+  // Structural Recommendations
+  columnSpacing           Float    // in meters
+  beamSizing              String   // Logical description
+  shearWallRequired       Boolean
+  
+  // Earthquake Analysis
+  earthquakeSafetyScore   Float    // 0-100
+  baseShear               Float    // in kN
+  softStoryDetected       Boolean
+  shearWallPlacement      Json
+  
+  // Flood Analysis
+  minimumPlinthHeight     Float    // in meters
+  drainageSlope           Float    // in percentage
+  basementFeasible        Boolean
+  waterResistantMaterials Json
+  
+  // Wind/Cyclone Analysis
+  vortexSheddingRisk      String   // LOW, MEDIUM, HIGH
+  heightToWidthRatio      Float
+  pressureZones           Json
+  shapeOptimization       String
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  
+  buildingInput           BuildingInput @relation(fields: [buildingInputId], references: [id], onDelete: Cascade)
+  
+  @@map("disaster_analysis")
+}
+
+model VastuReport {
+  id                      String   @id @default(uuid())
+  buildingInputId         String   @unique
+  
+  // Input Parameters
+  plotShape               String
+  entranceDirection       Orientation
+  
+  // Vastu Compliance
+  vastuComplianceScore    Float    // 0-100
+  overallCompliance       String   // EXCELLENT, GOOD, MODERATE, POOR
+  
+  // Zone Analysis
+  entranceSuitability     String
+  kitchenZoneCompliance   Boolean
+  bedroomZoneCompliance   Boolean
+  staircaseCompliance     Boolean
+  waterTankDirection      String
+  borewellDirection       String
+  
+  // Violations & Corrections
+  violations              Json     // Array of violation objects
+  corrections             Json     // Array of correction suggestions
+  
+  // Wind-Vastu Integration
+  windVastuCompatibility  String
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  
+  buildingInput           BuildingInput @relation(fields: [buildingInputId], references: [id], onDelete: Cascade)
+  
+  @@map("vastu_reports")
+}
+
+model FinalReport {
+  id                      String   @id @default(uuid())
+  buildingInputId         String   @unique
+  
+  // Composite Scores
+  overallSafetyScore      Float    // 0-100
+  costEfficiencyScore     Float    // 0-100
+  sustainabilityScore     Float    // 0-100
+  vastuScore              Float    // 0-100
+  
+  // Summary Sections
+  surveySummary           Json
+  riskAnalysis            Json
+  structuralLogic         Json
+  vastuSummary            Json
+  finalRecommendations    Json
+  
+  // Status
+  reportStatus            String   @default("GENERATED")
+  generatedAt             DateTime @default(now())
+  
+  buildingInput           BuildingInput @relation(fields: [buildingInputId], references: [id], onDelete: Cascade)
+  
+  @@map("final_reports")
+}
