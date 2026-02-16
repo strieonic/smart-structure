@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Smart Load Distribution Analyzer
 
 A production-ready backend system for AI-powered civil engineering analysis, providing disaster-resilient, structurally sound, and Vastu-compliant building recommendations for India.
@@ -496,3 +497,6 @@ Civil Engineering Intelligence Team
 ## 📞 Support
 
 For support, email support@smartloadanalyzer.com or open an issue in the repository.
+=======
+# smart-structure
+>>>>>>> 2331b3fcac4dbcfb8c98233a2e416373905c5f08
