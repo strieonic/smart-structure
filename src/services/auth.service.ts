@@ -93,46 +93,59 @@ export class AuthService {
     };
   }
 
-  private generateTokens(id: string, email: string, role: UserRole) {
-    const accessToken = jwt.sign(
-      { id, email, role },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
-    );
+ private generateTokens(id: string, email: string, role: UserRole) {
+  const jwtSecret = process.env.JWT_SECRET as string;
+  const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET as string;
 
-    const refreshToken = jwt.sign(
-      { id, email, role },
-      process.env.JWT_REFRESH_SECRET!,
-      { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
-    );
+  const accessToken = jwt.sign(
+    { id, email, role },
+    jwtSecret,
+    {
+      expiresIn: (process.env.JWT_EXPIRES_IN || '1h') as jwt.SignOptions['expiresIn'],
+    }
+  );
 
-    return { accessToken, refreshToken };
-  }
+  const refreshToken = jwt.sign(
+    { id, email, role },
+    jwtRefreshSecret,
+    {
+      expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as jwt.SignOptions['expiresIn'],
+    }
+  );
 
-  async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
-    try {
-      const decoded = jwt.verify(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET!
-      ) as { id: string; email: string; role: UserRole };
+  return { accessToken, refreshToken };
+}
 
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.id },
-      });
+async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
+  try {
+    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET as string;
+    const jwtSecret = process.env.JWT_SECRET as string;
 
-      if (!user || !user.isActive) {
-        throw new AppError('Invalid refresh token', 401);
-      }
+    const decoded = jwt.verify(
+      refreshToken,
+      jwtRefreshSecret
+    ) as { id: string; email: string; role: UserRole };
 
-      const accessToken = jwt.sign(
-        { id: user.id, email: user.email, role: user.role },
-        process.env.JWT_SECRET!,
-        { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
-      );
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
 
-      return { accessToken };
-    } catch (error) {
+    if (!user || !user.isActive) {
       throw new AppError('Invalid refresh token', 401);
     }
+
+    const accessToken = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      jwtSecret,
+      {
+        expiresIn: (process.env.JWT_EXPIRES_IN || '1h') as jwt.SignOptions['expiresIn'],
+      }
+    );
+
+    return { accessToken };
+  } catch {
+    throw new AppError('Invalid refresh token', 401);
   }
+}
+
 }

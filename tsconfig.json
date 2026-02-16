@@ -13,11 +13,13 @@
     "noImplicitReturns": false,
 
     "esModuleInterop": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true, 
     "forceConsistentCasingInFileNames": false,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "types": ["node"],
+    
+    "typeRoots": ["./node_modules/@types"],
+
     "sourceMap": true
   },
   "include": ["src/**/*"],
