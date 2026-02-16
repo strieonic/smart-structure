@@ -496,7 +496,7 @@ Civil Engineering Intelligence Team
 
 ## 📞 Support
 
-For support, email support@smartloadanalyzer.com or open an issue in the repository.
+For support, open an issue in the repository.
 =======
 # smart-structure
 >>>>>>> 2331b3fcac4dbcfb8c98233a2e416373905c5f08
