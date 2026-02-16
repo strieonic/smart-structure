@@ -8,7 +8,6 @@
 
     "strict": false,
     "noImplicitAny": false,
-    "strictNullChecks": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": false,
@@ -18,10 +17,8 @@
     "forceConsistentCasingInFileNames": false,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-
     "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
-
