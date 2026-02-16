@@ -164,8 +164,11 @@ export class AnalysisService {
         waterTankDirection: vastuAnalysis.waterTankDirection,
         borewellDirection: vastuAnalysis.borewellDirection,
         windVastuCompatibility: vastuAnalysis.windVastuCompatibility,
-        violations: vastuAnalysis.violations,
-        corrections: vastuAnalysis.corrections,
+        violations: vastuAnalysis.violations as any,
+        corrections: vastuAnalysis.corrections as any,
+
+
+
       },
     });
 
