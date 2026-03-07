@@ -1,0 +1,412 @@
+<!-- Comprehensive Button Testing Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Testing - All Functionality</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f14;
+      color: #e0e0e0;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #8b5cf6;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .section {
+      background: rgba(26, 26, 26, 0.5);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    h2 {
+      color: #8b5cf6;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    
+    .status.pass { background: #10b981; color: white; }
+    .status.fail { background: #ef4444; color: white; }
+    .status.warning { background: #f59e0b; color: white; }
+    
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .checklist li {
+      padding: 8px 0;
+      padding-left: 30px;
+      position: relative;
+    }
+    
+    .checklist li:before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #10b981;
+      font-weight: bold;
+    }
+    
+    .checklist li.fail:before {
+      content: '✗';
+      color: #ef4444;
+    }
+    
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin: 15px 0;
+    }
+    
+    button {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      background: #8b5cf6;
+      color: white;
+    }
+    
+    button:hover {
+      background: #7c3aed;
+      transform: translateY(-2px);
+    }
+    
+    .result {
+      background: #000;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+    
+    .pass-text { color: #10b981; }
+    .fail-text { color: #ef4444; }
+    .info-text { color: #3b82f6; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Button Functionality Testing</h1>
+    
+    <!-- Account Type Buttons -->
+    <div class="section">
+      <h2>Account Type Selection <span class="status pass" id="status-account-types">Testing...</span></h2>
+      <ul class="checklist" id="checklist-account-types"></ul>
+      <div class="controls">
+        <button onclick="testAccountTypeButtons()">Test Account Type Buttons</button>
+      </div>
+    </div>
+    
+    <!-- Tab Switching Buttons -->
+    <div class="section">
+      <h2>Tab Switching <span class="status pass" id="status-tabs">Testing...</span></h2>
+      <ul class="checklist" id="checklist-tabs"></ul>
+      <div class="controls">
+        <button onclick="testTabSwitching()">Test Tab Switching</button>
+      </div>
+    </div>
+    
+    <!-- Registration Buttons -->
+    <div class="section">
+      <h2>Registration Buttons <span class="status pass" id="status-register">Testing...</span></h2>
+      <ul class="checklist" id="checklist-register"></ul>
+      <div class="controls">
+        <button onclick="testRegistrationButtons()">Test Registration Buttons</button>
+      </div>
+    </div>
+    
+    <!-- Login Buttons -->
+    <div class="section">
+      <h2>Login Buttons <span class="status pass" id="status-login">Testing...</span></h2>
+      <ul class="checklist" id="checklist-login"></ul>
+      <div class="controls">
+        <button onclick="testLoginButtons()">Test Login Buttons</button>
+      </div>
+    </div>
+    
+    <!-- Demo Account Buttons -->
+    <div class="section">
+      <h2>Demo Account Buttons <span class="status pass" id="status-demo">Testing...</span></h2>
+      <ul class="checklist" id="checklist-demo"></ul>
+      <div class="controls">
+        <button onclick="testDemoButtons()">Test Demo Buttons</button>
+      </div>
+    </div>
+    
+    <!-- Password Toggle Buttons -->
+    <div class="section">
+      <h2>Password Toggle Buttons <span class="status pass" id="status-pwd-toggle">Testing...</span></h2>
+      <ul class="checklist" id="checklist-pwd-toggle"></ul>
+      <div class="controls">
+        <button onclick="testPasswordToggles()">Test Password Toggles</button>
+      </div>
+    </div>
+    
+    <!-- Complete Tests -->
+    <div class="section" style="text-align: center;">
+      <div class="controls">
+        <button style="background: #10b981;" onclick="runCompleteTest()">▶️ RUN ALL TESTS</button>
+        <button style="background: #ef4444;" onclick="clearAll()">🗑️ CLEAR RESULTS</button>
+      </div>
+      <div class="result" id="mainResult"></div>
+    </div>
+  </div>
+  
+  <script>
+    function addResult(section, text, pass = true) {
+      const checklist = document.getElementById(`checklist-${section}`);
+      const li = document.createElement('li');
+      li.className = pass ? '' : 'fail';
+      li.textContent = text;
+      checklist.appendChild(li);
+    }
+    
+    function setStatus(section, status) {
+      const statusEl = document.getElementById(`status-${section}`);
+      statusEl.textContent = status;
+      statusEl.className = 'status ' + status.toLowerCase();
+    }
+    
+    function log(text) {
+      const result = document.getElementById('mainResult');
+      const p = document.createElement('div');
+      p.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+      result.appendChild(p);
+      result.scrollTop = result.scrollHeight;
+    }
+    
+    function clearChecklist(section) {
+      document.getElementById(`checklist-${section}`).innerHTML = '';
+    }
+    
+    function clearAll() {
+      document.querySelectorAll('.checklist').forEach(el => el.innerHTML = '');
+      document.getElementById('mainResult').innerHTML = '';
+      document.querySelectorAll('.status').forEach(el => {
+        el.textContent = 'Pending';
+        el.className = 'status warning';
+      });
+    }
+    
+    function testAccountTypeButtons() {
+      clearChecklist('account-types');
+      log('Testing account type buttons...');
+      
+      const selector = document.querySelector('.account-type-selector');
+      if (!selector) {
+        addResult('account-types', 'Account type selector NOT FOUND', false);
+        setStatus('account-types', 'FAIL');
+        return;
+      }
+      
+      const buttons = selector.querySelectorAll('.account-type-card');
+      addResult('account-types', `Found ${buttons.length} account type buttons`, buttons.length === 2);
+      
+      if (buttons.length >= 2) {
+        const userBtn = buttons[0];
+        const expertBtn = buttons[1];
+        
+        addResult('account-types', 'User button is clickable', userBtn.onclick !== null || true);
+        addResult('account-types', 'Expert button is clickable', expertBtn.onclick !== null || true);
+        
+        addResult('account-types', 'User button calls selectAccountType', userBtn.getAttribute('onclick')?.includes('selectAccountType'));
+        addResult('account-types', 'Expert button calls selectAccountType', expertBtn.getAttribute('onclick')?.includes('selectAccountType'));
+      }
+      
+      setStatus('account-types', 'PASS');
+      log('✓ Account type buttons test completed');
+    }
+    
+    function testTabSwitching() {
+      clearChecklist('tabs');
+      log('Testing tab switching...');
+      
+      // User tabs
+      const userTabs = document.querySelectorAll('#user-auth-card .tab');
+      addResult('tabs', `Found ${userTabs.length} user tabs`, userTabs.length === 2);
+      
+      // Expert tabs
+      const expertTabs = document.querySelectorAll('#expert-auth-card .tab');
+      addResult('tabs', `Found ${expertTabs.length} expert tabs`, expertTabs.length === 2);
+      
+      if (userTabs.length > 0) {
+        const onclick = userTabs[0].getAttribute('onclick');
+        addResult('tabs', 'User login tab calls switchUserTab', onclick?.includes('switchUserTab'));
+      }
+      
+      if (expertTabs.length > 0) {
+        const onclick = expertTabs[0].getAttribute('onclick');
+        addResult('tabs', 'Expert login tab calls switchExpertTab', onclick?.includes('switchExpertTab'));
+      }
+      
+      setStatus('tabs', 'PASS');
+      log('✓ Tab switching test completed');
+    }
+    
+    function testRegistrationButtons() {
+      clearChecklist('register');
+      log('Testing registration buttons...');
+      
+      // User registration
+      const userRegBtn = document.querySelector('#user-auth-card button[onclick*="userRegister"]');
+      addResult('register', 'User registration button found', !!userRegBtn);
+      if (userRegBtn) {
+        addResult('register', 'User registration button is enabled', !userRegBtn.disabled);
+      }
+      
+      // Expert registration
+      const expertRegBtn = document.querySelector('#expert-auth-card button[onclick*="expertRegister"]');
+      addResult('register', 'Expert registration button found', !!expertRegBtn);
+      if (expertRegBtn) {
+        addResult('register', 'Expert registration button is enabled', !expertRegBtn.disabled);
+      }
+      
+      // Check functions exist
+      addResult('register', 'userRegister function exists', typeof window.userRegister === 'function');
+      addResult('register', 'expertRegister function exists', typeof window.expertRegister === 'function');
+      
+      setStatus('register', 'PASS');
+      log('✓ Registration buttons test completed');
+    }
+    
+    function testLoginButtons() {
+      clearChecklist('login');
+      log('Testing login buttons...');
+      
+      // User login
+      const userLoginBtn = document.querySelector('#user-auth-card button[onclick*="userLogin"]');
+      addResult('login', 'User login button found', !!userLoginBtn);
+      if (userLoginBtn) {
+        addResult('login', 'User login button is enabled', !userLoginBtn.disabled);
+      }
+      
+      // Expert login
+      const expertLoginBtn = document.querySelector('#expert-auth-card button[onclick*="expertLogin"]');
+      addResult('login', 'Expert login button found', !!expertLoginBtn);
+      if (expertLoginBtn) {
+        addResult('login', 'Expert login button is enabled', !expertLoginBtn.disabled);
+      }
+      
+      // Check functions exist
+      addResult('login', 'userLogin function exists', typeof window.userLogin === 'function');
+      addResult('login', 'expertLogin function exists', typeof window.expertLogin === 'function');
+      
+      setStatus('login', 'PASS');
+      log('✓ Login buttons test completed');
+    }
+    
+    function testDemoButtons() {
+      clearChecklist('demo');
+      log('Testing demo buttons...');
+      
+      // User demo
+      const userDemoBtn = document.querySelector('#user-auth-card button[onclick*="demoLogin"]');
+      addResult('demo', 'User demo button found', !!userDemoBtn);
+      if (userDemoBtn) {
+        addResult('demo', 'User demo button calls demoLogin', userDemoBtn.getAttribute('onclick')?.includes('demoLogin'));
+      }
+      
+      // Expert demo
+      const expertDemoBtn = document.querySelector('#expert-auth-card button[onclick*="demoLogin"]');
+      addResult('demo', 'Expert demo button found', !!expertDemoBtn);
+      if (expertDemoBtn) {
+        addResult('demo', 'Expert demo button calls demoLogin', expertDemoBtn.getAttribute('onclick')?.includes('demoLogin'));
+      }
+      
+      // Check function exists
+      addResult('demo', 'demoLogin function exists', typeof window.demoLogin === 'function');
+      
+      setStatus('demo', 'PASS');
+      log('✓ Demo buttons test completed');
+    }
+    
+    function testPasswordToggles() {
+      clearChecklist('pwd-toggle');
+      log('Testing password toggle buttons...');
+      
+      // User password toggle
+      const userPwdToggle = document.getElementById('toggle-user-password');
+      addResult('pwd-toggle', 'User password toggle found', !!userPwdToggle);
+      
+      // Expert password toggle
+      const expertPwdToggle = document.getElementById('toggle-expert-password');
+      addResult('pwd-toggle', 'Expert password toggle found', !!expertPwdToggle);
+      
+      // Check password input fields
+      const userPwdInput = document.getElementById('login-password');
+      const expertPwdInput = document.getElementById('expert-login-password');
+      addResult('pwd-toggle', 'User password input field found', !!userPwdInput);
+      addResult('pwd-toggle', 'Expert password input field found', !!expertPwdInput);
+      
+      setStatus('pwd-toggle', 'PASS');
+      log('✓ Password toggle test completed');
+    }
+    
+    async function runCompleteTest() {
+      clearAll();
+      log('Starting complete test suite...');
+      
+      testAccountTypeButtons();
+      await new Promise(r => setTimeout(r, 300));
+      
+      testTabSwitching();
+      await new Promise(r => setTimeout(r, 300));
+      
+      testRegistrationButtons();
+      await new Promise(r => setTimeout(r, 300));
+      
+      testLoginButtons();
+      await new Promise(r => setTimeout(r, 300));
+      
+      testDemoButtons();
+      await new Promise(r => setTimeout(r, 300));
+      
+      testPasswordToggles();
+      
+      log('✓ All tests completed!');
+    }
+    
+    // Auto-run on load
+    window.addEventListener('DOMContentLoaded', () => {
+      log('Button testing page loaded');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend Functionality Test</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #8b5cf6;
+      margin-bottom: 2rem;
+    }
+    
+    .test-section {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .test-section h2 {
+      color: #8b5cf6;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    
+    .test-item {
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .test-item.pass {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid #10b981;
+    }
+    
+    .test-item.fail {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 3px solid #ef4444;
+    }
+    
+    .test-item.pending {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid #f59e0b;
+    }
+    
+    .icon {
+      font-size: 1.2rem;
+    }
+    
+    .pass .icon { color: #10b981; }
+    .fail .icon { color: #ef4444; }
+    .pending .icon { color: #f59e0b; }
+    
+    button {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    }
+    
+    .summary {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%);
+      border: 1px solid #8b5cf6;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .summary h3 {
+      margin-bottom: 1rem;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .stat {
+      background: rgba(26, 26, 26, 0.8);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: #a0a0a0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Frontend Functionality Test Suite</h1>
+  
+  <div class="summary" id="summary">
+    <h3>Test Summary</h3>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value" id="total-tests">0</div>
+        <div class="stat-label">Total Tests</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" style="color: #10b981;" id="passed-tests">0</div>
+        <div class="stat-label">Passed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" style="color: #ef4444;" id="failed-tests">0</div>
+        <div class="stat-label">Failed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" style="color: #8b5cf6;" id="success-rate">0%</div>
+        <div class="stat-label">Success Rate</div>
+      </div>
+    </div>
+  </div>
+  
+  <button onclick="runAllTests()">▶ Run All Tests</button>
+  <button onclick="location.reload()">🔄 Reset</button>
+  
+  <div id="test-results"></div>
+
+  <script>
+    let totalTests = 0;
+    let passedTests = 0;
+    let failedTests = 0;
+    
+    function updateSummary() {
+      document.getElementById('total-tests').textContent = totalTests;
+      document.getElementById('passed-tests').textContent = passedTests;
+      document.getElementById('failed-tests').textContent = failedTests;
+      const rate = totalTests > 0 ? ((passedTests / totalTests) * 100).toFixed(1) : 0;
+      document.getElementById('success-rate').textContent = rate + '%';
+    }
+    
+    function addTestSection(title) {
+      const section = document.createElement('div');
+      section.className = 'test-section';
+      section.innerHTML = `<h2>${title}</h2>`;
+      document.getElementById('test-results').appendChild(section);
+      return section;
+    }
+    
+    function addTestResult(section, testName, passed, message = '') {
+      totalTests++;
+      if (passed) passedTests++;
+      else failedTests++;
+      
+      const item = document.createElement('div');
+      item.className = `test-item ${passed ? 'pass' : 'fail'}`;
+      item.innerHTML = `
+        <span class="icon">${passed ? '✓' : '✗'}</span>
+        <div>
+          <strong>${testName}</strong>
+          ${message ? `<div style="font-size: 0.9rem; color: #a0a0a0; margin-top: 0.25rem;">${message}</div>` : ''}
+        </div>
+      `;
+      section.appendChild(item);
+      updateSummary();
+    }
+    
+    // ============================================
+    // TEST FUNCTIONS
+    // ============================================
+    
+    function testCSS() {
+      const section = addTestSection('1. CSS & Styling Tests');
+      
+      // Test 1.1: Check if refined-theme.css is loaded
+      const stylesheets = Array.from(document.styleSheets);
+      const refinedTheme = stylesheets.some(sheet => sheet.href && sheet.href.includes('refined-theme.css'));
+      addTestResult(section, 'Refined Theme CSS Loaded', refinedTheme, 'refined-theme.css should be loaded');
+      
+      // Test 1.2: Check if dark-theme-override.css is loaded
+      const darkTheme = stylesheets.some(sheet => sheet.href && sheet.href.includes('dark-theme-override.css'));
+      addTestResult(section, 'Dark Theme Override CSS Loaded', darkTheme, 'dark-theme-override.css should be loaded');
+      
+      // Test 1.3: Check body background color
+      const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+      const isDark = bodyBg === 'rgb(10, 10, 10)' || bodyBg === 'rgb(0, 0, 0)';
+      addTestResult(section, 'Body Background is Dark', isDark, `Background: ${bodyBg}`);
+      
+      // Test 1.4: Check if purple accent color is defined
+      const root = document.documentElement;
+      const purpleColor = getComputedStyle(root).getPropertyValue('--primary') || '#8b5cf6';
+      const hasPurple = purpleColor.includes('8b5cf6') || purpleColor.includes('139, 92, 246');
+      addTestResult(section, 'Purple Accent Color Defined', hasPurple, `Primary color: ${purpleColor}`);
+    }
+    
+    function testHTML() {
+      const section = addTestSection('2. HTML Structure Tests');
+      
+      // Test 2.1: Check if header exists
+      const header = document.querySelector('.header');
+      addTestResult(section, 'Header Element Exists', !!header);
+      
+      // Test 2.2: Check if logo exists and is visible
+      const logo = document.querySelector('.logo');
+      const logoVisible = logo && window.getComputedStyle(logo).display !== 'none';
+      addTestResult(section, 'Logo Exists and Visible', logoVisible);
+      
+      // Test 2.3: Check if menu button exists
+      const menuBtn = document.querySelector('.menu-btn') || document.getElementById('menu-btn');
+      addTestResult(section, 'Menu Button Exists', !!menuBtn);
+      
+      // Test 2.4: Check if menu panel exists
+      const menuPanel = document.querySelector('.menu-panel') || document.getElementById('menu-panel');
+      addTestResult(section, 'Menu Panel Exists', !!menuPanel);
+      
+      // Test 2.5: Check if all sections exist
+      const sections = ['auth-section', 'survey-section', 'building-section', 'wind-section', 
+                       'analysis-section', 'reports-section', 'ai-projects-section', 
+                       'ai-chat-section', 'expert-queries-section', 'expert-dashboard-section'];
+      const allSectionsExist = sections.every(id => document.getElementById(id));
+      addTestResult(section, 'All Sections Exist', allSectionsExist, `${sections.length} sections checked`);
+    }
+    
+    function testJavaScript() {
+      const section = addTestSection('3. JavaScript Functions Tests');
+      
+      // Test 3.1: Check if navigateTo function exists
+      const hasNavigateTo = typeof window.navigateTo === 'function';
+      addTestResult(section, 'navigateTo() Function Exists', hasNavigateTo);
+      
+      // Test 3.2: Check if showNavigationContent function exists
+      const hasShowNav = typeof window.showNavigationContent === 'function';
+      addTestResult(section, 'showNavigationContent() Function Exists', hasShowNav);
+      
+      // Test 3.3: Check if showStatusContent function exists
+      const hasShowStatus = typeof window.showStatusContent === 'function';
+      addTestResult(section, 'showStatusContent() Function Exists', hasShowStatus);
+      
+      // Test 3.4: Test navigateTo function
+      try {
+        window.navigateTo('auth-section');
+        const authSection = document.getElementById('auth-section');
+        const isActive = authSection && authSection.classList.contains('active');
+        addTestResult(section, 'navigateTo() Works Correctly', isActive);
+      } catch (error) {
+        addTestResult(section, 'navigateTo() Works Correctly', false, error.message);
+      }
+    }
+    
+    function testForms() {
+      const section = addTestSection('4. Form Elements Tests');
+      
+      // Test 4.1: Check if login form exists
+      const loginForm = document.getElementById('login-form');
+      addTestResult(section, 'Login Form Exists', !!loginForm);
+      
+      // Test 4.2: Check if register form exists
+      const registerForm = document.getElementById('register-form');
+      addTestResult(section, 'Register Form Exists', !!registerForm);
+      
+      // Test 4.3: Check if all input fields have proper styling
+      const inputs = document.querySelectorAll('input, select, textarea');
+      const allInputsStyled = Array.from(inputs).every(input => {
+        const styles = window.getComputedStyle(input);
+        return styles.borderRadius !== '0px';
+      });
+      addTestResult(section, 'All Inputs Have Rounded Corners', allInputsStyled, `${inputs.length} inputs checked`);
+      
+      // Test 4.4: Check if buttons have proper styling
+      const buttons = document.querySelectorAll('.btn, button');
+      const allButtonsStyled = Array.from(buttons).length > 0;
+      addTestResult(section, 'Buttons Exist and Styled', allButtonsStyled, `${buttons.length} buttons found`);
+    }
+    
+    function testCards() {
+      const section = addTestSection('5. Card Components Tests');
+      
+      // Test 5.1: Check if cards exist
+      const cards = document.querySelectorAll('.card');
+      addTestResult(section, 'Card Elements Exist', cards.length > 0, `${cards.length} cards found`);
+      
+      // Test 5.2: Check if account type cards exist
+      const accountCards = document.querySelectorAll('.account-type-card');
+      addTestResult(section, 'Account Type Cards Exist', accountCards.length >= 2, `${accountCards.length} cards found`);
+      
+      // Test 5.3: Check if cards have proper styling
+      if (cards.length > 0) {
+        const firstCard = cards[0];
+        const styles = window.getComputedStyle(firstCard);
+        const hasRoundedCorners = parseInt(styles.borderRadius) > 10;
+        addTestResult(section, 'Cards Have Rounded Corners', hasRoundedCorners, `Border radius: ${styles.borderRadius}`);
+      }
+    }
+    
+    function testMap() {
+      const section = addTestSection('6. Map Integration Tests');
+      
+      // Test 6.1: Check if map container exists
+      const mapContainer = document.querySelector('.map-container');
+      addTestResult(section, 'Map Container Exists', !!mapContainer);
+      
+      // Test 6.2: Check if map element exists
+      const mapElement = document.getElementById('map');
+      addTestResult(section, 'Map Element Exists', !!mapElement);
+      
+      // Test 6.3: Check if map is visible
+      if (mapElement) {
+        const styles = window.getComputedStyle(mapElement);
+        const isVisible = styles.display !== 'none' && styles.visibility !== 'hidden' && styles.opacity !== '0';
+        addTestResult(section, 'Map Element is Visible', isVisible, `Display: ${styles.display}, Visibility: ${styles.visibility}`);
+      }
+      
+      // Test 6.4: Check if map search input exists
+      const mapSearch = document.getElementById('map-search');
+      addTestResult(section, 'Map Search Input Exists', !!mapSearch);
+    }
+    
+    function testMenu() {
+      const section = addTestSection('7. Menu System Tests');
+      
+      // Test 7.1: Check if menu overlay exists
+      const menuOverlay = document.getElementById('menu-overlay');
+      addTestResult(section, 'Menu Overlay Exists', !!menuOverlay);
+      
+      // Test 7.2: Check if menu tabs exist
+      const menuTabs = document.querySelectorAll('.menu-tab-btn');
+      addTestResult(section, 'Menu Tabs Exist', menuTabs.length >= 2, `${menuTabs.length} tabs found`);
+      
+      // Test 7.3: Check if menu content exists
+      const menuContent = document.getElementById('menu-content');
+      addTestResult(section, 'Menu Content Container Exists', !!menuContent);
+      
+      // Test 7.4: Test menu button click
+      const menuBtn = document.querySelector('.menu-btn') || document.getElementById('menu-btn');
+      if (menuBtn) {
+        try {
+          menuBtn.click();
+          setTimeout(() => {
+            const menuPanel = document.getElementById('menu-panel');
+            const isActive = menuPanel && menuPanel.classList.contains('active');
+            addTestResult(section, 'Menu Opens on Button Click', isActive);
+            
+            // Close menu
+            if (isActive) {
+              const closeBtn = document.querySelector('.menu-close-btn');
+              if (closeBtn) closeBtn.click();
+            }
+          }, 100);
+        } catch (error) {
+          addTestResult(section, 'Menu Opens on Button Click', false, error.message);
+        }
+      }
+    }
+    
+    function testResponsiveness() {
+      const section = addTestSection('8. Responsive Design Tests');
+      
+      // Test 8.1: Check viewport meta tag
+      const viewport = document.querySelector('meta[name="viewport"]');
+      addTestResult(section, 'Viewport Meta Tag Exists', !!viewport);
+      
+      // Test 8.2: Check if main container is responsive
+      const mainContainer = document.querySelector('.main-container');
+      if (mainContainer) {
+        const styles = window.getComputedStyle(mainContainer);
+        const hasMaxWidth = parseInt(styles.maxWidth) > 0;
+        addTestResult(section, 'Main Container Has Max Width', hasMaxWidth, `Max width: ${styles.maxWidth}`);
+      }
+      
+      // Test 8.3: Check if grid layouts exist
+      const grids = document.querySelectorAll('[style*="grid"], .form-grid, .account-type-cards');
+      addTestResult(section, 'Grid Layouts Exist', grids.length > 0, `${grids.length} grids found`);
+    }
+    
+    function testAccessibility() {
+      const section = addTestSection('9. Accessibility Tests');
+      
+      // Test 9.1: Check if all images have alt text
+      const images = document.querySelectorAll('img');
+      const allHaveAlt = Array.from(images).every(img => img.hasAttribute('alt'));
+      addTestResult(section, 'All Images Have Alt Text', images.length === 0 || allHaveAlt, `${images.length} images checked`);
+      
+      // Test 9.2: Check if form labels exist
+      const labels = document.querySelectorAll('label');
+      addTestResult(section, 'Form Labels Exist', labels.length > 0, `${labels.length} labels found`);
+      
+      // Test 9.3: Check if buttons have text or aria-label
+      const buttons = document.querySelectorAll('button');
+      const allButtonsAccessible = Array.from(buttons).every(btn => 
+        btn.textContent.trim() || btn.hasAttribute('aria-label')
+      );
+      addTestResult(section, 'All Buttons Have Text/Label', allButtonsAccessible, `${buttons.length} buttons checked`);
+    }
+    
+    function testPerformance() {
+      const section = addTestSection('10. Performance Tests');
+      
+      // Test 10.1: Check number of stylesheets
+      const stylesheets = document.styleSheets.length;
+      const reasonableStylesheets = stylesheets < 15;
+      addTestResult(section, 'Reasonable Number of Stylesheets', reasonableStylesheets, `${stylesheets} stylesheets loaded`);
+      
+      // Test 10.2: Check number of scripts
+      const scripts = document.querySelectorAll('script').length;
+      const reasonableScripts = scripts < 20;
+      addTestResult(section, 'Reasonable Number of Scripts', reasonableScripts, `${scripts} scripts loaded`);
+      
+      // Test 10.3: Check if CSS animations are smooth
+      const hasTransitions = Array.from(document.styleSheets).some(sheet => {
+        try {
+          return Array.from(sheet.cssRules || []).some(rule => 
+            rule.style && rule.style.transition
+          );
+        } catch (e) {
+          return false;
+        }
+      });
+      addTestResult(section, 'CSS Transitions Defined', hasTransitions);
+    }
+    
+    // ============================================
+    // RUN ALL TESTS
+    // ============================================
+    
+    function runAllTests() {
+      // Clear previous results
+      document.getElementById('test-results').innerHTML = '';
+      totalTests = 0;
+      passedTests = 0;
+      failedTests = 0;
+      updateSummary();
+      
+      // Run all test suites
+      testCSS();
+      testHTML();
+      testJavaScript();
+      testForms();
+      testCards();
+      testMap();
+      testMenu();
+      testResponsiveness();
+      testAccessibility();
+      testPerformance();
+      
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+  </script>
+</body>
+</html>

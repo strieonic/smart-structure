@@ -17,6 +17,7 @@ router.post(
   buildingInputController.create
 );
 
+router.get('/', buildingInputController.getAll);
 router.get('/:id', buildingInputController.getById);
 router.put('/:id', auditLog('UPDATE', 'BUILDING_INPUT'), buildingInputController.update);
 

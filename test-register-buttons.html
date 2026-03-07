@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Register Button Fixes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-top: 0; }
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .pass { color: #28a745; font-weight: bold; }
+        .fail { color: #dc3545; font-weight: bold; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #764ba2; }
+        #results {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .error-log {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Register Button Function Tests</h1>
+        
+        <div class="test-section">
+            <h2>Test Suite: Validate Fixed Register Functions</h2>
+            <p>Testing that both userRegister() and expertRegister() functions have been properly fixed with:</p>
+            <ul>
+                <li>✓ Granular field validation with specific error messages</li>
+                <li>✓ trim() on all input values</li>
+                <li>✓ Password length validation (min 6 chars)</li>
+                <li>✓ Form field clearing on success</li>
+                <li>✓ Direct DOM manipulation for tab switching</li>
+                <li>✓ Login email pre-filling</li>
+            </ul>
+        </div>
+
+        <button onclick="runTests()">Run All Tests</button>
+        <button onclick="testUserRegisterCode()">Test User Register Code</button>
+        <button onclick="testExpertRegisterCode()">Test Expert Register Code</button>
+        <button onclick="clearResults()">Clear Results</button>
+
+        <div id="results"></div>
+        <div id="errorLog"></div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:5000/api/v1';
+        const resultsDiv = document.getElementById('results');
+        const errorLogDiv = document.getElementById('errorLog');
+
+        function log(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            resultsDiv.innerHTML += `<div class="test-item"><span class="${type}">[${time}]</span> ${message}</div>`;
+            console.log(`[${type}] ${message}`);
+        }
+
+        function logError(error) {
+            errorLogDiv.innerHTML += `<div class="error-log">ERROR: ${error}</div>`;
+            console.error(error);
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+            errorLogDiv.innerHTML = '';
+        }
+
+        function testUserRegisterCode() {
+            log('🔍 Testing userRegister() Function Code...', 'info');
+            
+            try {
+                // Check if function exists
+                if (typeof userRegister === 'undefined') {
+                    log('✗ userRegister function NOT found', 'fail');
+                    return;
+                }
+                log('✓ userRegister function exists', 'pass');
+
+                // Check function body contains key fixes
+                const funcStr = userRegister.toString();
+                
+                const checks = [
+                    { text: 'trim() for name', pattern: /getElementById\("user-register-name"\)\.value\.trim\(\)/ },
+                    { text: 'trim() for email', pattern: /getElementById\("user-register-email"\)\.value\.trim\(\)/ },
+                    { text: 'trim() for password', pattern: /getElementById\("user-register-password"\)\.value\.trim\(\)/ },
+                    { text: 'Field validation for name', pattern: /!name.*showToast.*name/ },
+                    { text: 'Field validation for email', pattern: /!email.*showToast.*email/ },
+                    { text: 'Field validation for password', pattern: /!password.*showToast.*password/ },
+                    { text: 'Password length check', pattern: /password\.length\s*<\s*6/ },
+                    { text: 'API POST to /auth/register', pattern: /fetch.*API.*auth\/register/ },
+                    { text: 'Direct DOM manipulation for tab', pattern: /querySelectorAll.*user-auth-card.*tab.*classList/ },
+                    { text: 'Form field clearing', pattern: /getElementById\('user-register-name'\)\.value\s*=\s*''/ },
+                    { text: 'Login email pre-fill', pattern: /getElementById\('login-email'\)\.value\s*=\s*email/ }
+                ];
+
+                checks.forEach(check => {
+                    if (check.pattern.test(funcStr)) {
+                        log(`✓ ${check.text}`, 'pass');
+                    } else {
+                        log(`✗ ${check.text}`, 'fail');
+                    }
+                });
+
+            } catch (err) {
+                logError('Error testing userRegister: ' + err.message);
+            }
+        }
+
+        function testExpertRegisterCode() {
+            log('🔍 Testing expertRegister() Function Code...', 'info');
+            
+            try {
+                // Check if function exists
+                if (typeof expertRegister === 'undefined') {
+                    log('✗ expertRegister function NOT found', 'fail');
+                    return;
+                }
+                log('✓ expertRegister function exists', 'pass');
+
+                // Check function body contains key fixes
+                const funcStr = expertRegister.toString();
+                
+                const checks = [
+                    { text: 'trim() for name', pattern: /getElementById\("expert-register-name"\)\.value\.trim\(\)/ },
+                    { text: 'trim() for email', pattern: /getElementById\("expert-register-email"\)\.value\.trim\(\)/ },
+                    { text: 'trim() for password', pattern: /getElementById\("expert-register-password"\)\.value\.trim\(\)/ },
+                    { text: 'trim() for license', pattern: /getElementById\("expert-register-license"\)\.value\.trim\(\)/ },
+                    { text: 'Field validation for name', pattern: /!name.*showToast.*name/ },
+                    { text: 'Field validation for email', pattern: /!email.*showToast.*email/ },
+                    { text: 'Field validation for password', pattern: /!password.*showToast.*password/ },
+                    { text: 'Field validation for license', pattern: /!license.*showToast.*license/ },
+                    { text: 'Password length check', pattern: /password\.length\s*<\s*6/ },
+                    { text: 'API POST with license', pattern: /JSON\.stringify.*license/ },
+                    { text: 'Direct DOM manipulation for tab', pattern: /querySelectorAll.*expert-auth-card.*tab.*classList/ },
+                    { text: 'Form field clearing', pattern: /getElementById\('expert-register-license'\)\.value\s*=\s*''/ },
+                    { text: 'Login email pre-fill', pattern: /getElementById\('expert-login-email'\)\.value\s*=\s*email/ }
+                ];
+
+                checks.forEach(check => {
+                    if (check.pattern.test(funcStr)) {
+                        log(`✓ ${check.text}`, 'pass');
+                    } else {
+                        log(`✗ ${check.text}`, 'fail');
+                    }
+                });
+
+            } catch (err) {
+                logError('Error testing expertRegister: ' + err.message);
+            }
+        }
+
+        function runTests() {
+            clearResults();
+            log('Starting comprehensive register button tests...', 'info');
+            log('='.repeat(50), 'info');
+            
+            testUserRegisterCode();
+            log('', 'info');
+            testExpertRegisterCode();
+            
+            log('='.repeat(50), 'info');
+            log('✓ Test suite complete!', 'pass');
+        }
+
+        // Auto-run tests when page loads
+        window.addEventListener('load', () => {
+            log('Page loaded. Register functions are ready to test.', 'info');
+            log('Click "Run All Tests" to verify the fixes.', 'info');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API & Frontend Testing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f14;
+      color: #e0e0e0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #8b5cf6;
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+    
+    .test-section {
+      background: rgba(26, 26, 26, 0.5);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .test-section h2 {
+      color: #8b5cf6;
+      margin-bottom: 15px;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background: #8b5cf6;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #7c3aed;
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: #10b981;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #059669;
+    }
+    
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+    
+    .output {
+      background: #000;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 10px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .line {
+      padding: 4px 0;
+    }
+    
+    .success {
+      color: #10b981;
+    }
+    
+    .error {
+      color: #ef4444;
+    }
+    
+    .warning {
+      color: #f59e0b;
+    }
+    
+    .info {
+      color: #3b82f6;
+    }
+    
+    input {
+      padding: 10px;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 6px;
+      background: rgba(26, 26, 26, 0.8);
+      color: #e0e0e0;
+      margin: 5px 0;
+      width: 100%;
+      max-width: 500px;
+    }
+    
+    .form-group {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Frontend & API Testing Dashboard</h1>
+    
+    <!-- API Tests -->
+    <div class="test-section">
+      <h2>🌐 API Connection Tests</h2>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="testAPIHealth()">Test API Health</button>
+        <button class="btn btn-primary" onclick="testRegistrationEndpoint()">Test Registration Endpoint</button>
+        <button class="btn btn-primary" onclick="testLoginEndpoint()">Test Login Endpoint</button>
+      </div>
+      <div class="output" id="apiOutput"></div>
+    </div>
+    
+    <!-- Form Tests -->
+    <div class="test-section">
+      <h2>📝 Form Functionality Tests</h2>
+      <div class="form-group">
+        <label>Test User Registration</label>
+        <input type="text" id="testUserName" placeholder="Full Name" value="Test User">
+        <input type="email" id="testUserEmail" placeholder="Email" value="testuser@example.com">
+        <input type="password" id="testUserPassword" placeholder="Password" value="TestPass123!">
+      </div>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="testUserRegistrationForm()">Test User Registration</button>
+        <button class="btn btn-primary" onclick="testUserLoginForm()">Test User Login</button>
+      </div>
+      <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(139, 92, 246, 0.2);">
+      
+      <div class="form-group">
+        <label>Test Expert Registration</label>
+        <input type="text" id="testExpertName" placeholder="Full Name" value="Dr. Expert Test">
+        <input type="email" id="testExpertEmail" placeholder="Email" value="experttest@example.com">
+        <input type="password" id="testExpertPassword" placeholder="Password" value="ExpertPass123!">
+        <input type="text" id="testExpertLicense" placeholder="License #" value="PE123456">
+      </div>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="testExpertRegistrationForm()">Test Expert Registration</button>
+        <button class="btn btn-primary" onclick="testExpertLoginForm()">Test Expert Login</button>
+      </div>
+      <div class="output" id="formOutput"></div>
+    </div>
+    
+    <!-- DOM Tests -->
+    <div class="test-section">
+      <h2>🏗️ DOM Elements Tests</h2>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="testDOMElements()">Test All DOM Elements</button>
+        <button class="btn btn-primary" onclick="testEventListeners()">Test Event Listeners</button>
+      </div>
+      <div class="output" id="domOutput"></div>
+    </div>
+    
+    <!-- Full Tests -->
+    <div class="test-section">
+      <h2>🚀 Complete Test Suite</h2>
+      <div class="button-group">
+        <button class="btn btn-secondary" onclick="runAllTests()">▶️ Run All Tests</button>
+        <button class="btn btn-danger" onclick="clearAllOutputs()">🗑️ Clear All</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function log(message, type = 'info', outputId = 'apiOutput') {
+      const output = document.getElementById(outputId);
+      const line = document.createElement('div');
+      line.className = `line ${type}`;
+      line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+    
+    function clearOutput(outputId) {
+      document.getElementById(outputId).innerHTML = '';
+    }
+    
+    function clearAllOutputs() {
+      clearOutput('apiOutput');
+      clearOutput('formOutput');
+      clearOutput('domOutput');
+    }
+    
+    async function testAPIHealth() {
+      clearOutput('apiOutput');
+      log('Testing API health endpoint...', 'info', 'apiOutput');
+      
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/health', { 
+          method: 'GET',
+          timeout: 5000 
+        });
+        const data = await response.json();
+        log(`✓ API Health: ${response.status}`, 'success', 'apiOutput');
+        log(`Response: ${JSON.stringify(data, null, 2)}`, 'info', 'apiOutput');
+      } catch (err) {
+        log(`✗ API Health Error: ${err.message}`, 'error', 'apiOutput');
+      }
+    }
+    
+    async function testRegistrationEndpoint() {
+      clearOutput('apiOutput');
+      log('Testing registration endpoint...', 'info', 'apiOutput');
+      
+      const testData = {
+        email: `testuser${Date.now()}@example.com`,
+        password: 'TestPassword123!',
+        name: 'Test User',
+        role: 'USER'
+      };
+      
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(testData)
+        });
+        
+        const data = await response.json();
+        log(`✓ Registration Endpoint: ${response.status}`, 'success', 'apiOutput');
+        log(`Request: ${JSON.stringify(testData)}`, 'info', 'apiOutput');
+        log(`Response: ${JSON.stringify(data, null, 2)}`, 'info', 'apiOutput');
+      } catch (err) {
+        log(`✗ Registration Error: ${err.message}`, 'error', 'apiOutput');
+      }
+    }
+    
+    async function testLoginEndpoint() {
+      clearOutput('apiOutput');
+      log('Testing login endpoint...', 'info', 'apiOutput');
+      
+      const testData = {
+        email: 'user@demo.smartload.io',
+        password: 'Demo1234!'
+      };
+      
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(testData)
+        });
+        
+        const data = await response.json();
+        log(`✓ Login Endpoint: ${response.status}`, 'success', 'apiOutput');
+        log(`Request: ${JSON.stringify(testData)}`, 'info', 'apiOutput');
+        log(`Response: ${JSON.stringify(data, null, 2)}`, 'info', 'apiOutput');
+      } catch (err) {
+        log(`✗ Login Error: ${err.message}`, 'error', 'apiOutput');
+      }
+    }
+    
+    function testDOMElements() {
+      clearOutput('domOutput');
+      log('Testing DOM elements...', 'info', 'domOutput');
+      
+      const elements = {
+        'user-auth-card': document.getElementById('user-auth-card'),
+        'expert-auth-card': document.getElementById('expert-auth-card'),
+        'user-login-fields': document.getElementById('user-login-fields'),
+        'expert-login-fields': document.getElementById('expert-login-fields'),
+        'login-email': document.getElementById('login-email'),
+        'expert-register-license': document.getElementById('expert-register-license'),
+      };
+      
+      let passed = 0, failed = 0;
+      for (const [name, element] of Object.entries(elements)) {
+        if (element) {
+          log(`✓ ${name} found`, 'success', 'domOutput');
+          passed++;
+        } else {
+          log(`✗ ${name} NOT FOUND`, 'error', 'domOutput');
+          failed++;
+        }
+      }
+      
+      log(`\nDOM Test Summary: ${passed} passed, ${failed} failed`, failed > 0 ? 'warning' : 'success', 'domOutput');
+    }
+    
+    function testEventListeners() {
+      clearOutput('domOutput');
+      log('Testing event listeners...', 'info', 'domOutput');
+      
+      const functions = [
+        'selectAccountType',
+        'switchUserTab',
+        'switchExpertTab',
+        'userLogin',
+        'userRegister',
+        'expertLogin',
+        'expertRegister',
+        'demoLogin'
+      ];
+      
+      let passed = 0, failed = 0;
+      for (const funcName of functions) {
+        if (typeof window[funcName] === 'function') {
+          log(`✓ ${funcName} is defined`, 'success', 'domOutput');
+          passed++;
+        } else {
+          log(`✗ ${funcName} NOT DEFINED`, 'error', 'domOutput');
+          failed++;
+        }
+      }
+      
+      log(`\nFunction Test Summary: ${passed} passed, ${failed} failed`, failed > 0 ? 'warning' : 'success', 'domOutput');
+    }
+    
+    function testUserRegistrationForm() {
+      clearOutput('formOutput');
+      log('Testing user registration form validation...', 'info', 'formOutput');
+      
+      const name = document.getElementById('testUserName').value;
+      const email = document.getElementById('testUserEmail').value;
+      const password = document.getElementById('testUserPassword').value;
+      
+      if (!name || !email || !password) {
+        log('✗ Form validation failed: Missing fields', 'error', 'formOutput');
+        return;
+      }
+      
+      log(`✓ Form validation passed`, 'success', 'formOutput');
+      log(`Name: ${name}`, 'info', 'formOutput');
+      log(`Email: ${email}`, 'info', 'formOutput');
+      log(`Password: ${'*'.repeat(password.length)}`, 'info', 'formOutput');
+    }
+    
+    function testUserLoginForm() {
+      clearOutput('formOutput');
+      log('Testing user login form...', 'info', 'formOutput');
+      log('Email: ' + document.getElementById('testUserEmail').value, 'info', 'formOutput');
+      log('Password: ' + '*'.repeat(document.getElementById('testUserPassword').value.length), 'info', 'formOutput');
+      log('✓ User login form is ready', 'success', 'formOutput');
+    }
+    
+    function testExpertRegistrationForm() {
+      clearOutput('formOutput');
+      log('Testing expert registration form validation...', 'info', 'formOutput');
+      
+      const name = document.getElementById('testExpertName').value;
+      const email = document.getElementById('testExpertEmail').value;
+      const password = document.getElementById('testExpertPassword').value;
+      const license = document.getElementById('testExpertLicense').value;
+      
+      if (!name || !email || !password || !license) {
+        log('✗ Form validation failed: Missing fields', 'error', 'formOutput');
+        return;
+      }
+      
+      log(`✓ Form validation passed`, 'success', 'formOutput');
+      log(`Name: ${name}`, 'info', 'formOutput');
+      log(`Email: ${email}`, 'info', 'formOutput');
+      log(`Password: ${'*'.repeat(password.length)}`, 'info', 'formOutput');
+      log(`License: ${license}`, 'info', 'formOutput');
+      log('✓ Expert form includes license field', 'success', 'formOutput');
+    }
+    
+    function testExpertLoginForm() {
+      clearOutput('formOutput');
+      log('Testing expert login form...', 'info', 'formOutput');
+      log('Email: ' + document.getElementById('testExpertEmail').value, 'info', 'formOutput');
+      log('Password: ' + '*'.repeat(document.getElementById('testExpertPassword').value.length), 'info', 'formOutput');
+      log('✓ Expert login form is ready', 'success', 'formOutput');
+    }
+    
+    async function runAllTests() {
+      clearAllOutputs();
+      log('Running complete test suite...', 'warning', 'apiOutput');
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      testAPIHealth();
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      testDOMElements();
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      testEventListeners();
+    }
+    
+    // Auto-run tests on load
+    window.addEventListener('DOMContentLoaded', () => {
+      log('Test dashboard loaded successfully', 'success', 'apiOutput');
+    });
+  </script>
+</body>
+</html>

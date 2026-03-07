@@ -1,0 +1,305 @@
+╔════════════════════════════════════════════════════════════╗
+║              VISUAL GUIDE - WHAT YOU'LL SEE               ║
+╚════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+1. MAIN PAGE (http://localhost:8080)
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  Smart Load Analyzer                            [☰]  ← Menu │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  [Login/Register Section]                                   │
+│  [Land Survey Section]                                      │
+│  [Building Input Section]                                   │
+│  [Analysis Section]                                         │
+│  [Expert System Section]                                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Key Points:
+• Menu button (☰) in TOP-RIGHT corner
+• Clean interface, no status indicators (when all OK)
+• All existing features intact
+
+═══════════════════════════════════════════════════════════════
+2. SYSTEM MENU (Click ☰ button)
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  System Menu                                          [X]   │
+├─────────────────────────────────────────────────────────────┤
+│  [Site Status]  [Settings]  ← Tabs                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Content appears here based on selected tab                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Features:
+• Slides in from right
+• Two tabs: Site Status, Settings
+• Close with X or click outside
+
+═══════════════════════════════════════════════════════════════
+3. SITE STATUS TAB
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  🏥 Site Status                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────────┐  ┌──────────────────┐               │
+│  │ 🖥️ Backend       │  │ 💻 Frontend      │               │
+│  │ 🟢 Online        │  │ 🟢 Online        │               │
+│  │ Port: 5000       │  │ Port: 8080       │               │
+│  │ Last: 2:30 PM    │  │ Last: 2:30 PM    │               │
+│  └──────────────────┘  └──────────────────┘               │
+│                                                             │
+│  📊 Active Issues                                           │
+│  ┌─────┐  ┌─────┐  ┌─────┐                                │
+│  │  0  │  │  0  │  │  0  │                                │
+│  │Error│  │Warn │  │Info │                                │
+│  └─────┘  └─────┘  └─────┘                                │
+│                                                             │
+│  ✅ All systems operational!                                │
+│                                                             │
+│  [🔄 Refresh Status]                                        │
+└─────────────────────────────────────────────────────────────┘
+
+Shows:
+• Real-time server status
+• Issue counts
+• Recent notifications
+• AI suggestions (when available)
+• Refresh button
+
+═══════════════════════════════════════════════════════════════
+4. SITE STATUS WITH ERRORS
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  🏥 Site Status                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────────┐  ┌──────────────────┐               │
+│  │ 🖥️ Backend       │  │ 💻 Frontend      │               │
+│  │ 🔴 Offline       │  │ 🟢 Online        │               │
+│  │ Port: 5000       │  │ Port: 8080       │               │
+│  └──────────────────┘  └──────────────────┘               │
+│                                                             │
+│  📊 Active Issues                                           │
+│  ┌─────┐  ┌─────┐  ┌─────┐                                │
+│  │  2  │  │  1  │  │  0  │                                │
+│  │Error│  │Warn │  │Info │                                │
+│  └─────┘  └─────┘  └─────┘                                │
+│                                                             │
+│  📋 Recent Notifications                                    │
+│  ┌───────────────────────────────────────────────────────┐ │
+│  │ ❌ Backend Offline                                    │ │
+│  │ Backend server stopped unexpectedly                   │ │
+│  │                                                       │ │
+│  │ 🤖 AI Analysis:                                       │ │
+│  │ The backend crashed due to port conflict.             │ │
+│  │ Attempting automatic restart...                       │ │
+│  │                                                       │ │
+│  │ [View Details]                                        │ │
+│  └───────────────────────────────────────────────────────┘ │
+│                                                             │
+│  [🔄 Refresh Status]                                        │
+└─────────────────────────────────────────────────────────────┘
+
+Shows:
+• Offline servers highlighted in red
+• Error counts
+• Detailed notifications
+• AI suggestions for fixes
+• Error details button
+
+═══════════════════════════════════════════════════════════════
+5. SETTINGS TAB
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  ⚙️ Settings                                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  👤 Account                                                 │
+│  ┌───────────────────────────────────────────────────────┐ │
+│  │ 🔐 Login                                              │ │
+│  │    Access your account                                │ │
+│  └───────────────────────────────────────────────────────┘ │
+│  ┌───────────────────────────────────────────────────────┐ │
+│  │ ➕ Register                                           │ │
+│  │    Create new account                                 │ │
+│  └───────────────────────────────────────────────────────┘ │
+│                                                             │
+│  🔔 Notifications                                           │
+│  ☑ Enable error notifications                              │
+│  ☑ Auto-dismiss success messages                           │
+│                                                             │
+│  🤖 AI Assistant                                            │
+│  ☑ Enable AI error debugging                               │
+│                                                             │
+│  🛡️ Monitoring                                              │
+│  Check Interval: 1 minute                                   │
+│  Auto-Restart: Enabled (3 attempts)                         │
+│  Monitoring Service: Port 9999                              │
+│                                                             │
+│  ℹ️ About                                                   │
+│  Smart Load Distribution Analyzer                           │
+│  Version 2.0 with Intelligent Error Handler                │
+│  © 2026 - AI-Powered Civil Engineering Platform            │
+└─────────────────────────────────────────────────────────────┘
+
+Features:
+• Quick access to Login/Register
+• Notification preferences
+• AI toggle
+• System information
+• About section
+
+═══════════════════════════════════════════════════════════════
+6. STATUS INDICATOR (Only When Offline)
+═══════════════════════════════════════════════════════════════
+
+WHEN ALL OK:
+(Nothing shown - clean interface)
+
+WHEN BACKEND OFFLINE:
+┌─────────────────────────────────┐
+│ 🔴 Backend Offline              │  ← Bottom-Right Corner
+└─────────────────────────────────┘
+
+WHEN BOTH OFFLINE:
+┌─────────────────────────────────┐
+│ 🔴 Backend Offline              │  ← Bottom-Right Corner
+│ 🔴 Frontend Offline             │
+└─────────────────────────────────┘
+
+Key Point:
+• Only appears when there's a problem
+• Hidden when everything is working
+• Cleaner interface
+
+═══════════════════════════════════════════════════════════════
+7. NOTIFICATIONS (Only for Errors)
+═══════════════════════════════════════════════════════════════
+
+TOP-RIGHT CORNER (When error occurs):
+
+┌─────────────────────────────────────┐
+│ ❌ Backend Crashed              [X] │
+│ Backend server stopped              │
+│ unexpectedly. Attempting            │
+│ automatic restart...                │
+│                                     │
+│ 🤖 AI Analysis:                     │
+│ Port conflict detected. Killing     │
+│ process and restarting...           │
+│                                     │
+│ [Auto-fixing...]                    │
+└─────────────────────────────────────┘
+
+After Fix:
+┌─────────────────────────────────────┐
+│ ✅ Backend Recovered            [X] │
+│ Backend server has been             │
+│ restarted successfully              │
+│                                     │
+│ (Auto-dismisses in 5 seconds)       │
+└─────────────────────────────────────┘
+
+Key Points:
+• Only shows for errors/recovery
+• No notifications for normal operation
+• AI suggestions included
+• Auto-dismiss for success
+
+═══════════════════════════════════════════════════════════════
+8. INTERACTION FLOW
+═══════════════════════════════════════════════════════════════
+
+Normal Usage:
+1. Open http://localhost:8080
+2. Use site normally (no interruptions)
+3. Status indicator hidden
+4. No notifications
+
+When Error Occurs:
+1. Error detected (within 1 minute)
+2. Notification appears (top-right)
+3. Status indicator appears (bottom-right)
+4. AI analyzes error
+5. Auto-fix attempted
+6. Success notification shown
+7. Status indicator disappears
+
+Checking System Status:
+1. Click ☰ button (top-right)
+2. View Site Status tab
+3. See real-time status
+4. Check for issues
+5. Read AI suggestions
+6. Refresh if needed
+
+Accessing Settings:
+1. Click ☰ button (top-right)
+2. Click Settings tab
+3. Quick login/register
+4. Adjust preferences
+5. View system info
+
+═══════════════════════════════════════════════════════════════
+9. COLOR CODING
+═══════════════════════════════════════════════════════════════
+
+Status Colors:
+🟢 Green  = Online/Working
+🔴 Red    = Offline/Error
+🟡 Yellow = Warning/Processing
+
+Notification Colors:
+Green Border  = Success (✅)
+Red Border    = Error (❌)
+Yellow Border = Warning (⚠️)
+Blue Border   = Info (ℹ️)
+
+Menu Colors:
+Purple Gradient = Menu button, headers
+White Background = Content areas
+Gray = Inactive elements
+
+═══════════════════════════════════════════════════════════════
+10. KEYBOARD SHORTCUTS
+═══════════════════════════════════════════════════════════════
+
+ESC key = Close system menu
+Click outside menu = Close menu
+X button = Close notification
+X button = Close menu
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+What You'll See:
+✅ Clean interface (no clutter when all OK)
+✅ Menu button in top-right (☰)
+✅ Status indicator only when needed
+✅ Notifications only for errors
+✅ AI suggestions for complex issues
+✅ Comprehensive Site Status dashboard
+✅ Easy-to-use Settings interface
+
+What You Won't See:
+❌ Constant status indicators
+❌ Notifications every minute
+❌ Cluttered interface
+❌ Unnecessary information
+
+The Result:
+🎉 Cleaner, smarter, more user-friendly interface!
+
+═══════════════════════════════════════════════════════════════

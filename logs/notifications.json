@@ -1,0 +1,106 @@
+[
+  {
+    "id": 1772537910259,
+    "title": "🔧 Frontend Script Error",
+    "message": "Detected JavaScript error. Checking for missing files and fixing...",
+    "type": "warning",
+    "fixable": true,
+    "errorDetails": null,
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:30.259Z",
+    "dismissed": false
+  },
+  {
+    "id": 1772537910269,
+    "title": "⚡ Frontend Timing Issue",
+    "message": "JavaScript error detected. This usually resolves on page refresh.",
+    "type": "info",
+    "fixable": false,
+    "errorDetails": {
+      "error": "Uncaught TypeError: Cannot read properties of null (reading 'style') at http://localhost:8080/expert-interface.js?v=3.0:32:49",
+      "solution": "Try refreshing the page (F5) or clearing browser cache (Ctrl+F5)",
+      "technicalNote": "This error often occurs when JavaScript runs before DOM is fully loaded"
+    },
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:30.269Z",
+    "dismissed": false
+  },
+  {
+    "id": 1772537911395,
+    "title": "🔧 Frontend Script Error",
+    "message": "Detected JavaScript error. Checking for missing files and fixing...",
+    "type": "warning",
+    "fixable": true,
+    "errorDetails": null,
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:31.395Z",
+    "dismissed": false
+  },
+  {
+    "id": 1772537911398,
+    "title": "⚡ Frontend Timing Issue",
+    "message": "JavaScript error detected. This usually resolves on page refresh.",
+    "type": "info",
+    "fixable": false,
+    "errorDetails": {
+      "error": "Uncaught TypeError: Cannot read properties of null (reading 'style') at http://localhost:8080/expert-interface.js?v=3.0:32:49",
+      "solution": "Try refreshing the page (F5) or clearing browser cache (Ctrl+F5)",
+      "technicalNote": "This error often occurs when JavaScript runs before DOM is fully loaded"
+    },
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:31.398Z",
+    "dismissed": false
+  },
+  {
+    "id": 1772537912102,
+    "title": "🔧 Frontend Script Error",
+    "message": "Detected JavaScript error. Checking for missing files and fixing...",
+    "type": "warning",
+    "fixable": true,
+    "errorDetails": null,
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:32.102Z",
+    "dismissed": false
+  },
+  {
+    "id": 1772537912106,
+    "title": "⚡ Frontend Timing Issue",
+    "message": "JavaScript error detected. This usually resolves on page refresh.",
+    "type": "info",
+    "fixable": false,
+    "errorDetails": {
+      "error": "Uncaught TypeError: Cannot read properties of null (reading 'style') at http://localhost:8080/expert-interface.js?v=3.0:32:49",
+      "solution": "Try refreshing the page (F5) or clearing browser cache (Ctrl+F5)",
+      "technicalNote": "This error often occurs when JavaScript runs before DOM is fully loaded"
+    },
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:32.106Z",
+    "dismissed": false
+  },
+  {
+    "id": 1772537912465,
+    "title": "🔧 Frontend Script Error",
+    "message": "Detected JavaScript error. Checking for missing files and fixing...",
+    "type": "warning",
+    "fixable": true,
+    "errorDetails": null,
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:32.465Z",
+    "dismissed": false
+  },
+  {
+    "id": 1772537912468,
+    "title": "⚡ Frontend Timing Issue",
+    "message": "JavaScript error detected. This usually resolves on page refresh.",
+    "type": "info",
+    "fixable": false,
+    "errorDetails": {
+      "error": "Uncaught TypeError: Cannot read properties of null (reading 'style') at http://localhost:8080/expert-interface.js?v=3.0:32:49",
+      "solution": "Try refreshing the page (F5) or clearing browser cache (Ctrl+F5)",
+      "technicalNote": "This error often occurs when JavaScript runs before DOM is fully loaded"
+    },
+    "aiSuggestion": null,
+    "timestamp": "2026-03-03T11:38:32.468Z",
+    "dismissed": false
+  }
+]

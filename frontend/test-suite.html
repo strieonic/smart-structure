@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Load Analyzer - Comprehensive Test Suite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f14;
+      color: #e0e0e0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #8b5cf6;
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    }
+    
+    .test-section {
+      background: rgba(26, 26, 26, 0.5);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .test-section h2 {
+      color: #8b5cf6;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .test-item {
+      background: rgba(20, 20, 25, 0.5);
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border-left: 3px solid rgba(139, 92, 246, 0.3);
+    }
+    
+    .test-item.pass {
+      border-left-color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+    }
+    
+    .test-item.fail {
+      border-left-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+    
+    .test-item.pending {
+      border-left-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      margin-left: 10px;
+    }
+    
+    .status-pass {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+    
+    .status-fail {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    
+    .status-pending {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+    }
+    
+    .test-button {
+      background: #8b5cf6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    .test-button:hover {
+      background: #7c3aed;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+    }
+    
+    .test-button:active {
+      transform: translateY(0);
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    
+    .result-log {
+      background: #000;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 10px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .result-log-line {
+      padding: 4px 0;
+    }
+    
+    .error-log {
+      color: #ef4444;
+    }
+    
+    .success-log {
+      color: #10b981;
+    }
+    
+    .warning-log {
+      color: #f59e0b;
+    }
+    
+    .info-log {
+      color: #3b82f6;
+    }
+    
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .summary-card {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+    
+    .summary-card h3 {
+      color: #8b5cf6;
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+    
+    .summary-card p {
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Smart Load Analyzer - Complete Test Suite</h1>
+    
+    <!-- Test Controls -->
+    <div class="test-section">
+      <h2>🎮 Test Controls</h2>
+      <div class="controls">
+        <button class="test-button" onclick="runAllTests()">▶️ Run All Tests</button>
+        <button class="test-button" onclick="testHTMLElements()">🏗️ Test HTML Elements</button>
+        <button class="test-button" onclick="testJavaScriptFunctions()">⚙️ Test JS Functions</button>
+        <button class="test-button" onclick="testFormValidation()">✅ Test Form Validation</button>
+        <button class="test-button" onclick="testAPI()">🌐 Test API Connection</button>
+        <button class="test-button" onclick="clearLogs()">🗑️ Clear Logs</button>
+      </div>
+      <div class="result-log" id="testLog"></div>
+    </div>
+    
+    <!-- Test Results -->
+    <div class="test-section">
+      <h2>📊 Test Results</h2>
+      <div id="testResults"></div>
+      <div class="summary" id="testSummary"></div>
+    </div>
+  </div>
+  
+  <script>
+    const testLog = [];
+    const testResults = {};
+    
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = `[${timestamp}] ${message}`;
+      testLog.push({ message: logEntry, type });
+      updateLogDisplay();
+    }
+    
+    function updateLogDisplay() {
+      const logContainer = document.getElementById('testLog');
+      logContainer.innerHTML = testLog.map(entry => {
+        const className = entry.type === 'error' ? 'error-log' : 
+                         entry.type === 'success' ? 'success-log' : 
+                         entry.type === 'warning' ? 'warning-log' : 'info-log';
+        return `<div class="result-log-line ${className}">${entry.message}</div>`;
+      }).join('');
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+    
+    function addTestResult(category, name, status, details = '') {
+      if (!testResults[category]) testResults[category] = { pass: 0, fail: 0, pending: 0 };
+      testResults[category][status]++;
+      
+      const resultsDiv = document.getElementById('testResults');
+      const statusClass = status === 'pass' ? 'pass' : status === 'fail' ? 'fail' : 'pending';
+      const statusText = status === 'pass' ? '✅ PASS' : status === 'fail' ? '❌ FAIL' : '⏳ PENDING';
+      
+      const item = document.createElement('div');
+      item.className = `test-item ${statusClass}`;
+      item.innerHTML = `
+        <strong>${category} → ${name}</strong>
+        <span class="status-badge status-${status}">${statusText}</span>
+        ${details ? `<div style="margin-top: 8px; color: #9ca3af; font-size: 0.9rem;">${details}</div>` : ''}
+      `;
+      resultsDiv.appendChild(item);
+    }
+    
+    function updateSummary() {
+      const summaryDiv = document.getElementById('testSummary');
+      let totalPass = 0, totalFail = 0, totalPending = 0;
+      
+      for (const [category, counts] of Object.entries(testResults)) {
+        totalPass += counts.pass;
+        totalFail += counts.fail;
+        totalPending += counts.pending;
+      }
+      
+      summaryDiv.innerHTML = `
+        <div class="summary-card">
+          <h3 style="color: #10b981;">${totalPass}</h3>
+          <p>Tests Passed</p>
+        </div>
+        <div class="summary-card">
+          <h3 style="color: #ef4444;">${totalFail}</h3>
+          <p>Tests Failed</p>
+        </div>
+        <div class="summary-card">
+          <h3 style="color: #f59e0b;">${totalPending}</h3>
+          <p>Tests Pending</p>
+        </div>
+        <div class="summary-card">
+          <h3>${totalPass + totalFail + totalPending}</h3>
+          <p>Total Tests</p>
+        </div>
+      `;
+    }
+    
+    function testHTMLElements() {
+      log('Starting HTML Elements Test...', 'info');
+      
+      const elements = {
+        'account-type-selector': document.querySelector('.account-type-selector'),
+        'user-auth-card': document.getElementById('user-auth-card'),
+        'expert-auth-card': document.getElementById('expert-auth-card'),
+        'user-login-fields': document.getElementById('user-login-fields'),
+        'user-register-fields': document.getElementById('user-register-fields'),
+        'expert-login-fields': document.getElementById('expert-login-fields'),
+        'expert-register-fields': document.getElementById('expert-register-fields'),
+        'login-email': document.getElementById('login-email'),
+        'login-password': document.getElementById('login-password'),
+        'user-register-name': document.getElementById('user-register-name'),
+        'expert-register-license': document.getElementById('expert-register-license'),
+        'toggle-user-password': document.getElementById('toggle-user-password'),
+        'toggle-expert-password': document.getElementById('toggle-expert-password'),
+      };
+      
+      for (const [name, element] of Object.entries(elements)) {
+        if (element) {
+          addTestResult('HTML Elements', name, 'pass', `Element found: ${element.tagName}`);
+          log(`✓ ${name} found`, 'success');
+        } else {
+          addTestResult('HTML Elements', name, 'fail', 'Element not found in DOM');
+          log(`✗ ${name} NOT FOUND`, 'error');
+        }
+      }
+      
+      updateSummary();
+    }
+    
+    function testJavaScriptFunctions() {
+      log('Starting JavaScript Functions Test...', 'info');
+      
+      const functions = [
+        'selectAccountType',
+        'switchUserTab',
+        'switchExpertTab',
+        'userLogin',
+        'userRegister',
+        'expertLogin',
+        'expertRegister',
+        'demoLogin',
+        'showToast',
+        'navigateTo',
+        'updateSidebarNavigation'
+      ];
+      
+      for (const funcName of functions) {
+        if (typeof window[funcName] === 'function') {
+          addTestResult('JS Functions', funcName, 'pass', 'Function is defined and callable');
+          log(`✓ ${funcName} is defined`, 'success');
+        } else {
+          addTestResult('JS Functions', funcName, 'fail', 'Function not found');
+          log(`✗ ${funcName} NOT DEFINED`, 'error');
+        }
+      }
+      
+      updateSummary();
+    }
+    
+    function testFormValidation() {
+      log('Starting Form Validation Test...', 'info');
+      
+      // Test user registration validation
+      log('Testing user registration form...', 'info');
+      const userNameInput = document.getElementById('user-register-name');
+      const userEmailInput = document.getElementById('user-register-email');
+      const userPasswordInput = document.getElementById('user-register-password');
+      
+      if (userNameInput && userEmailInput && userPasswordInput) {
+        const formValid = userNameInput.required && userEmailInput.required && userPasswordInput.required;
+        if (formValid) {
+          addTestResult('Form Validation', 'User Registration Form', 'pass', 'All fields are marked as required');
+          log('✓ User registration form validated', 'success');
+        }
+      }
+      
+      // Test expert registration validation
+      log('Testing expert registration form...', 'info');
+      const expertNameInput = document.getElementById('expert-register-name');
+      const expertEmailInput = document.getElementById('expert-register-email');
+      const expertPasswordInput = document.getElementById('expert-register-password');
+      const expertLicenseInput = document.getElementById('expert-register-license');
+      
+      if (expertNameInput && expertEmailInput && expertPasswordInput && expertLicenseInput) {
+        const formValid = expertNameInput.required && expertEmailInput.required && 
+                         expertPasswordInput.required && expertLicenseInput.required;
+        if (formValid) {
+          addTestResult('Form Validation', 'Expert Registration Form', 'pass', 'All fields including license are marked as required');
+          log('✓ Expert registration form validated', 'success');
+        }
+      }
+      
+      // Test login form fields
+      const loginEmail = document.getElementById('login-email');
+      const loginPassword = document.getElementById('login-password');
+      const expertLoginEmail = document.getElementById('expert-login-email');
+      const expertLoginPassword = document.getElementById('expert-login-password');
+      
+      if (loginEmail && loginPassword) {
+        addTestResult('Form Validation', 'User Login Form', 'pass', 'Login fields present');
+        log('✓ User login form fields present', 'success');
+      }
+      
+      if (expertLoginEmail && expertLoginPassword) {
+        addTestResult('Form Validation', 'Expert Login Form', 'pass', 'Expert login fields present');
+        log('✓ Expert login form fields present', 'success');
+      }
+      
+      updateSummary();
+    }
+    
+    function testAPI() {
+      log('Testing API connection...', 'info');
+      
+      // Check if API endpoint is defined
+      if (typeof window.API !== 'undefined') {
+        addTestResult('API Connection', 'API Endpoint Defined', 'pass', `API = ${window.API}`);
+        log(`✓ API endpoint defined: ${window.API}`, 'success');
+      } else {
+        addTestResult('API Connection', 'API Endpoint Defined', 'fail', 'API endpoint not defined');
+        log('✗ API endpoint NOT defined', 'error');
+      }
+      
+      // Test state object
+      if (typeof window.state !== 'undefined') {
+        addTestResult('API Connection', 'State Object', 'pass', 'Global state object exists');
+        log('✓ State object exists', 'success');
+      } else {
+        addTestResult('API Connection', 'State Object', 'fail', 'State object not found');
+        log('✗ State object NOT FOUND', 'error');
+      }
+      
+      // Test localStorage
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        addTestResult('API Connection', 'localStorage', 'pass', 'localStorage is accessible');
+        log('✓ localStorage is accessible', 'success');
+      } catch (err) {
+        addTestResult('API Connection', 'localStorage', 'fail', 'localStorage not accessible');
+        log(`✗ localStorage error: ${err.message}`, 'error');
+      }
+      
+      updateSummary();
+    }
+    
+    function runAllTests() {
+      // Clear previous results
+      document.getElementById('testResults').innerHTML = '';
+      testResults = {};
+      testLog = [];
+      updateLogDisplay();
+      
+      log('=== COMPLETE TEST SUITE STARTED ===', 'info');
+      testHTMLElements();
+      testJavaScriptFunctions();
+      testFormValidation();
+      testAPI();
+      log('=== TEST SUITE COMPLETED ===', 'success');
+      
+      updateSummary();
+    }
+    
+    function clearLogs() {
+      testLog = [];
+      document.getElementById('testLog').innerHTML = '';
+      log('Logs cleared', 'info');
+    }
+    
+    // Run tests on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      log('Test page loaded', 'info');
+    });
+  </script>
+</body>
+</html>

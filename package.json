@@ -7,6 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "launch": "node -e \"require('child_process').spawn('cmd', ['/c', 'launch.bat'], {stdio: 'inherit', detached: true})\"",
+    "start-with-monitoring": "node error-handler.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio"
@@ -20,7 +22,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.13.12",
     "@prisma/client": "^5.8.0",
+    "axios": "^1.13.5",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -29,6 +34,7 @@
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "openai": "^6.22.0",
     "winston": "^3.11.0",
     "zod": "^3.22.4"
   },

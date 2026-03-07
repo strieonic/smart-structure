@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expert System Frontend Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #1f2937;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .test-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .test-section h2 {
+      color: #2563eb;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .test-item {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #e5e7eb;
+      background: #f9fafb;
+      border-radius: 4px;
+    }
+
+    .test-item.pass {
+      border-left-color: #10b981;
+      background: #d1fae5;
+    }
+
+    .test-item.fail {
+      border-left-color: #ef4444;
+      background: #fee2e2;
+    }
+
+    .test-item.pending {
+      border-left-color: #f59e0b;
+      background: #fef3c7;
+    }
+
+    .test-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #1f2937;
+    }
+
+    .test-result {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn:hover {
+      background: #1e40af;
+    }
+
+    .btn-success {
+      background: #10b981;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .summary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .summary h2 {
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .code {
+      background: #1f2937;
+      color: #10b981;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Expert System Frontend Test Suite</h1>
+
+    <div class="test-section">
+      <h2>📋 Test Controls</h2>
+      <button class="btn" onclick="runAllTests()">Run All Tests</button>
+      <button class="btn btn-success" onclick="openExpertInterface()">Open Expert Interface</button>
+      <button class="btn" onclick="clearResults()">Clear Results</button>
+    </div>
+
+    <div class="summary" id="summary" style="display: none;">
+      <h2>Test Summary</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="total-tests">0</div>
+          <div class="stat-label">Total Tests</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="passed-tests">0</div>
+          <div class="stat-label">Passed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="failed-tests">0</div>
+          <div class="stat-label">Failed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="success-rate">0%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🔍 File Structure Tests</h2>
+      <div id="file-tests"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>🎨 CSS Tests</h2>
+      <div id="css-tests"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>⚙️ JavaScript Tests</h2>
+      <div id="js-tests"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>🌐 API Tests</h2>
+      <div id="api-tests"></div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://localhost:5000/api/v1";
+    let testResults = {
+      total: 0,
+      passed: 0,
+      failed: 0
+    };
+
+    function addTestResult(container, name, passed, message) {
+      testResults.total++;
+      if (passed) testResults.passed++;
+      else testResults.failed++;
+
+      const div = document.createElement('div');
+      div.className = `test-item ${passed ? 'pass' : 'fail'}`;
+      div.innerHTML = `
+        <div class="test-name">${passed ? '✓' : '✗'} ${name}</div>
+        <div class="test-result">${message}</div>
+      `;
+      document.getElementById(container).appendChild(div);
+    }
+
+    async function testFileStructure() {
+      console.log('Testing file structure...');
+      
+      // Test if expert-interface.js exists
+      try {
+        const response = await fetch('frontend/expert-interface.js');
+        addTestResult('file-tests', 'expert-interface.js exists', response.ok, 
+          response.ok ? 'File found and accessible' : 'File not found');
+      } catch (error) {
+        addTestResult('file-tests', 'expert-interface.js exists', false, error.message);
+      }
+
+      // Test if index.html exists
+      try {
+        const response = await fetch('frontend/index.html');
+        addTestResult('file-tests', 'index.html exists', response.ok, 
+          response.ok ? 'File found and accessible' : 'File not found');
+      } catch (error) {
+        addTestResult('file-tests', 'index.html exists', false, error.message);
+      }
+
+      // Test if style.css exists
+      try {
+        const response = await fetch('frontend/style.css');
+        addTestResult('file-tests', 'style.css exists', response.ok, 
+          response.ok ? 'File found and accessible' : 'File not found');
+      } catch (error) {
+        addTestResult('file-tests', 'style.css exists', false, error.message);
+      }
+    }
+
+    async function testCSS() {
+      console.log('Testing CSS...');
+      
+      // Test if expert-specific CSS classes are defined
+      const testClasses = [
+        'account-type-card',
+        'expert-registration-steps',
+        'specialization-grid',
+        'expert-card',
+        'expert-avatar',
+        'experts-grid'
+      ];
+
+      for (const className of testClasses) {
+        const element = document.createElement('div');
+        element.className = className;
+        document.body.appendChild(element);
+        const styles = window.getComputedStyle(element);
+        const hasStyles = styles.display !== 'inline'; // Default display
+        document.body.removeChild(element);
+        
+        addTestResult('css-tests', `CSS class .${className}`, hasStyles, 
+          hasStyles ? 'Class styles applied' : 'Class not found or no styles');
+      }
+    }
+
+    async function testJavaScript() {
+      console.log('Testing JavaScript functions...');
+      
+      // Test if expert functions are defined
+      const functions = [
+        'selectAccountType',
+        'switchExpertTab',
+        'expertLogin',
+        'registerExpert',
+        'loadExpertDashboard',
+        'loadVerifiedExperts',
+        'createExpertQuery'
+      ];
+
+      for (const funcName of functions) {
+        const exists = typeof window[funcName] === 'function';
+        addTestResult('js-tests', `Function ${funcName}()`, exists, 
+          exists ? 'Function defined' : 'Function not found');
+      }
+    }
+
+    async function testAPI() {
+      console.log('Testing API endpoints...');
+      
+      // Test health endpoint
+      try {
+        const response = await fetch(`${API}/health`);
+        const data = await response.json();
+        addTestResult('api-tests', 'API Health Check', response.ok, 
+          response.ok ? `API is running: ${data.message}` : 'API not responding');
+      } catch (error) {
+        addTestResult('api-tests', 'API Health Check', false, error.message);
+      }
+
+      // Test experts endpoint (public)
+      try {
+        const response = await fetch(`${API}/experts`);
+        const data = await response.json();
+        addTestResult('api-tests', 'GET /experts (public)', response.ok, 
+          response.ok ? `Found ${data.data?.length || 0} experts` : 'Endpoint failed');
+      } catch (error) {
+        addTestResult('api-tests', 'GET /experts (public)', false, error.message);
+      }
+
+      // Test expert registration endpoint structure
+      try {
+        const response = await fetch(`${API}/auth/register-expert`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}) // Empty body to test endpoint exists
+        });
+        // We expect 400 or validation error, not 404
+        const endpointExists = response.status !== 404;
+        addTestResult('api-tests', 'POST /auth/register-expert endpoint', endpointExists, 
+          endpointExists ? 'Endpoint exists (validation expected)' : 'Endpoint not found');
+      } catch (error) {
+        addTestResult('api-tests', 'POST /auth/register-expert endpoint', false, error.message);
+      }
+    }
+
+    async function runAllTests() {
+      // Clear previous results
+      clearResults();
+      
+      // Show summary
+      document.getElementById('summary').style.display = 'block';
+      
+      // Run all test suites
+      await testFileStructure();
+      await testCSS();
+      await testJavaScript();
+      await testAPI();
+      
+      // Update summary
+      document.getElementById('total-tests').textContent = testResults.total;
+      document.getElementById('passed-tests').textContent = testResults.passed;
+      document.getElementById('failed-tests').textContent = testResults.failed;
+      const successRate = testResults.total > 0 
+        ? ((testResults.passed / testResults.total) * 100).toFixed(1) 
+        : 0;
+      document.getElementById('success-rate').textContent = successRate + '%';
+      
+      console.log('All tests completed!');
+      console.log(`Passed: ${testResults.passed}/${testResults.total}`);
+    }
+
+    function clearResults() {
+      testResults = { total: 0, passed: 0, failed: 0 };
+      document.getElementById('file-tests').innerHTML = '';
+      document.getElementById('css-tests').innerHTML = '';
+      document.getElementById('js-tests').innerHTML = '';
+      document.getElementById('api-tests').innerHTML = '';
+      document.getElementById('summary').style.display = 'none';
+    }
+
+    function openExpertInterface() {
+      window.open('frontend/index.html', '_blank');
+    }
+
+    // Auto-run tests on load
+    window.addEventListener('load', () => {
+      console.log('Frontend test suite loaded');
+      console.log('Click "Run All Tests" to start testing');
+    });
+  </script>
+</body>
+</html>

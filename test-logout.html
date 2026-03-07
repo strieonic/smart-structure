@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logout Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #7c3aed;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Logout Button Diagnostic Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Check if logout function exists</h2>
+        <button onclick="test1()">Run Test 1</button>
+        <div id="test1-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Call logout function directly</h2>
+        <button onclick="test2()">Run Test 2</button>
+        <div id="test2-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Simulate logout button click</h2>
+        <button onclick="test3()">Run Test 3</button>
+        <div id="test3-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Check localStorage</h2>
+        <button onclick="test4()">Run Test 4</button>
+        <div id="test4-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Quick Fix: Reload Application</h2>
+        <button onclick="window.location.href='http://localhost:8080'">Open Main App</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function test1() {
+            const result = document.getElementById('test1-result');
+            if (typeof logout === 'function') {
+                result.innerHTML = '<p class="success">✓ logout function exists!</p>';
+            } else {
+                result.innerHTML = '<p class="error">✗ logout function NOT found!</p>';
+            }
+        }
+        
+        function test2() {
+            const result = document.getElementById('test2-result');
+            try {
+                // Set up test state
+                localStorage.setItem('token', 'test-token');
+                localStorage.setItem('user', JSON.stringify({name: 'Test User'}));
+                
+                result.innerHTML = '<p class="info">Calling logout()...</p>';
+                
+                // Call logout
+                logout();
+                
+                // Check if localStorage was cleared
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    result.innerHTML += '<p class="success">✓ Logout executed successfully!</p>';
+                    result.innerHTML += '<p class="success">✓ LocalStorage cleared!</p>';
+                } else {
+                    result.innerHTML += '<p class="error">✗ LocalStorage NOT cleared!</p>';
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">✗ Error: ${error.message}</p>`;
+            }
+        }
+        
+        function test3() {
+            const result = document.getElementById('test3-result');
+            result.innerHTML = '<p class="info">Opening main app to test logout button...</p>';
+            setTimeout(() => {
+                window.open('http://localhost:8080', '_blank');
+                result.innerHTML += '<p class="success">✓ Main app opened in new tab</p>';
+                result.innerHTML += '<p class="info">Try clicking the logout button there!</p>';
+            }, 500);
+        }
+        
+        function test4() {
+            const result = document.getElementById('test4-result');
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            result.innerHTML = '<h3>Current LocalStorage:</h3>';
+            result.innerHTML += `<p>Token: ${token || '<span class="info">Not set</span>'}</p>`;
+            result.innerHTML += `<p>User: ${user || '<span class="info">Not set</span>'}</p>`;
+            
+            if (!token && !user) {
+                result.innerHTML += '<p class="success">✓ User is logged out</p>';
+            } else {
+                result.innerHTML += '<p class="info">User appears to be logged in</p>';
+            }
+        }
+    </script>
+</body>
+</html>

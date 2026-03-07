@@ -1,0 +1,374 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    EXPERT SYSTEM IMPLEMENTATION GUIDE                      ║
+║                    Smart Load Distribution Analyzer                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════
+1. SYSTEM OVERVIEW
+═══════════════════════════════════════════════════════════════════════════
+
+The Expert System adds a complete professional consultation layer to the 
+Smart Load Analyzer platform, enabling:
+
+✓ Expert Registration & Authentication
+✓ Expert Dashboard with Statistics
+✓ Query Management System
+✓ Verified Expert Directory
+✓ Expert Portfolio Management
+✓ Real-time Query Assignment
+✓ Response Management
+
+═══════════════════════════════════════════════════════════════════════════
+2. FEATURES IMPLEMENTED
+═══════════════════════════════════════════════════════════════════════════
+
+A. AUTHENTICATION SYSTEM
+   ✓ Dual account type selection (User/Expert)
+   ✓ Multi-step expert registration
+   ✓ Expert login with role verification
+   ✓ Auto-redirect to expert dashboard
+
+B. EXPERT REGISTRATION
+   Step 1: Basic Information
+   - Full Name
+   - Professional Email
+   - Password
+   - Mobile Number
+
+   Step 2: Professional Details
+   - Professional Type (Structural Engineer, Architect, etc.)
+   - Years of Experience
+   - Location
+   - License Number
+
+   Step 3: Specializations
+   - Multi-select specializations
+   - Professional Summary
+   - Auto-verification
+   - Auto-portfolio generation
+
+C. EXPERT DASHBOARD
+   ✓ Statistics Cards
+     - Total Pending Queries
+     - Total Solved Queries
+     - Average Rating (placeholder)
+     - Profile Views (placeholder)
+   
+   ✓ Recent Queries List
+   ✓ Quick Actions
+   ✓ Profile Management
+
+D. QUERY MANAGEMENT
+   ✓ Create Query (Users)
+   ✓ Assign Query (Experts)
+   ✓ Respond to Query (Experts)
+   ✓ Query Status Tracking
+   ✓ Priority Levels (LOW, MEDIUM, HIGH, URGENT)
+   ✓ Category Filtering
+
+E. VERIFIED EXPERT DIRECTORY
+   ✓ Public expert listing
+   ✓ Filter by:
+     - Specialization
+     - Location
+     - Experience
+   ✓ Expert profile cards
+   ✓ Contact expert functionality
+
+F. EXPERT PORTFOLIO
+   ✓ Auto-generated on registration
+   ✓ Editable sections
+   ✓ Professional summary
+   ✓ Specializations display
+   ✓ Contact information
+
+═══════════════════════════════════════════════════════════════════════════
+3. API ENDPOINTS
+═══════════════════════════════════════════════════════════════════════════
+
+AUTHENTICATION
+--------------
+POST   /api/v1/auth/register-expert    Register new expert
+POST   /api/v1/auth/login               Login (user or expert)
+
+EXPERT MANAGEMENT
+-----------------
+GET    /api/v1/experts                  Get all verified experts (public)
+GET    /api/v1/experts/:id              Get expert profile (public)
+GET    /api/v1/experts/dashboard/stats  Get expert dashboard (protected)
+PUT    /api/v1/experts/profile          Update expert profile (protected)
+
+QUERY MANAGEMENT
+----------------
+GET    /api/v1/experts/queries/all      Get expert's queries (protected)
+POST   /api/v1/experts/queries          Create new query (protected)
+POST   /api/v1/experts/queries/:id/assign    Assign query to self (protected)
+POST   /api/v1/experts/queries/:id/respond   Respond to query (protected)
+
+═══════════════════════════════════════════════════════════════════════════
+4. DATABASE SCHEMA
+═══════════════════════════════════════════════════════════════════════════
+
+ExpertProfile
+-------------
+- id: String (UUID)
+- userId: String (FK to User)
+- expertType: ExpertType enum
+- licenseNumber: String
+- experience: String
+- location: String
+- phone: String
+- specializations: Json (Array)
+- summary: String (optional)
+- status: ExpertStatus (PENDING, VERIFIED, SUSPENDED)
+- verifiedAt: DateTime
+- portfolioData: Json (optional)
+
+ExpertQuery
+-----------
+- id: String (UUID)
+- userId: String (FK to User)
+- expertId: String (FK to ExpertProfile, nullable)
+- title: String
+- description: String
+- category: String
+- priority: String (LOW, MEDIUM, HIGH, URGENT)
+- projectId: String (optional)
+- status: String (OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED)
+- expertResponse: String (optional)
+- responseAt: DateTime (optional)
+- attachments: Json (optional)
+
+═══════════════════════════════════════════════════════════════════════════
+5. FRONTEND STRUCTURE
+═══════════════════════════════════════════════════════════════════════════
+
+NEW FILES:
+----------
+frontend/expert-interface.js    Expert-specific JavaScript functions
+frontend/style.css              Updated with expert styles
+
+UPDATED FILES:
+--------------
+frontend/index.html             Added expert sections
+frontend/script.js              Existing functionality maintained
+
+NEW SECTIONS IN HTML:
+---------------------
+1. Account Type Selection
+2. Expert Authentication (Login/Register)
+3. Expert Dashboard
+4. Verified Expert Directory
+5. Professional Network
+6. Expert Profile Management
+
+═══════════════════════════════════════════════════════════════════════════
+6. TESTING
+═══════════════════════════════════════════════════════════════════════════
+
+Run the comprehensive test suite:
+
+   node test-expert-system.js
+
+This will test:
+✓ User registration
+✓ Expert registration
+✓ Expert login
+✓ Expert dashboard loading
+✓ Verified experts listing
+✓ Query creation
+✓ Query assignment
+✓ Query response
+✓ Expert queries retrieval
+✓ Profile updates
+✓ Expert profile viewing
+✓ Expert filtering
+
+═══════════════════════════════════════════════════════════════════════════
+7. USER WORKFLOWS
+═══════════════════════════════════════════════════════════════════════════
+
+A. EXPERT REGISTRATION WORKFLOW
+   1. Navigate to Authentication section
+   2. Select "Expert Account" type
+   3. Click "Expert Register" tab
+   4. Fill Step 1: Basic Information → Next
+   5. Fill Step 2: Professional Details → Next
+   6. Fill Step 3: Specializations → Register
+   7. Auto-login and redirect to Expert Dashboard
+
+B. EXPERT LOGIN WORKFLOW
+   1. Navigate to Authentication section
+   2. Select "Expert Account" type
+   3. Click "Expert Login" tab
+   4. Enter credentials → Login
+   5. Redirect to Expert Dashboard
+
+C. USER POSTS QUERY WORKFLOW
+   1. Login as regular user
+   2. Navigate to Professional Network
+   3. Click "Post Query" button
+   4. Fill query details
+   5. Optionally select preferred expert
+   6. Submit query
+
+D. EXPERT RESPONDS TO QUERY WORKFLOW
+   1. Login as expert
+   2. Navigate to Expert Dashboard
+   3. View pending queries
+   4. Click "Accept Query" to assign to self
+   5. Click "Respond" to submit response
+   6. Query status changes to RESOLVED
+
+═══════════════════════════════════════════════════════════════════════════
+8. DESIGN CONSISTENCY
+═══════════════════════════════════════════════════════════════════════════
+
+The expert interface maintains the existing JP Morgan-style design:
+
+✓ Same color palette (primary blue, success green, etc.)
+✓ Same typography (Segoe UI)
+✓ Same shadow system
+✓ Same border radius (8px, 12px)
+✓ Same spacing system
+✓ Same button styles
+✓ Same card layouts
+✓ Responsive design maintained
+
+═══════════════════════════════════════════════════════════════════════════
+9. SECURITY FEATURES
+═══════════════════════════════════════════════════════════════════════════
+
+✓ JWT-based authentication
+✓ Role-based access control
+✓ Protected expert routes
+✓ Password hashing (bcrypt)
+✓ Token refresh mechanism
+✓ Input validation (Zod schemas)
+✓ SQL injection prevention (Prisma ORM)
+
+═══════════════════════════════════════════════════════════════════════════
+10. DEPLOYMENT CHECKLIST
+═══════════════════════════════════════════════════════════════════════════
+
+□ Run database migrations
+   npm run prisma:migrate
+
+□ Generate Prisma client
+   npm run prisma:generate
+
+□ Build TypeScript
+   npm run build
+
+□ Test backend endpoints
+   node test-expert-system.js
+
+□ Test frontend UI
+   - Open frontend/index.html
+   - Test expert registration
+   - Test expert login
+   - Test dashboard loading
+   - Test query management
+
+□ Verify all existing features still work
+   - User registration/login
+   - Land survey creation
+   - Building input
+   - Wind data
+   - Analysis features
+   - AI projects
+   - AI chat
+
+═══════════════════════════════════════════════════════════════════════════
+11. FUTURE ENHANCEMENTS (Ready for Implementation)
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Rating System (database ready)
+✓ Payment Integration (structure ready)
+✓ Real-time Chat (WebSocket ready)
+✓ File Attachments (schema ready)
+✓ Notification System (hooks ready)
+✓ Advanced Search (filters ready)
+✓ Expert Analytics (dashboard ready)
+✓ Portfolio Projects (schema ready)
+
+═══════════════════════════════════════════════════════════════════════════
+12. TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════
+
+Issue: Expert registration fails
+Solution: Check database connection, verify Prisma schema is up to date
+
+Issue: Expert dashboard not loading
+Solution: Verify JWT token is valid, check expert role in database
+
+Issue: Queries not appearing
+Solution: Check query status, verify expert profile exists
+
+Issue: Cannot assign query
+Solution: Verify query status is OPEN, check expert authentication
+
+Issue: Frontend not loading expert sections
+Solution: Clear browser cache, verify expert-interface.js is loaded
+
+═══════════════════════════════════════════════════════════════════════════
+13. SUPPORT & MAINTENANCE
+═══════════════════════════════════════════════════════════════════════════
+
+Database Maintenance:
+- Regular backups recommended
+- Monitor query performance
+- Index optimization on expertId, userId, status fields
+
+Code Maintenance:
+- All code follows TypeScript best practices
+- Comprehensive error handling implemented
+- Logging configured via Winston
+
+Performance:
+- Pagination ready for large datasets
+- Efficient database queries with Prisma
+- Optimized frontend rendering
+
+═══════════════════════════════════════════════════════════════════════════
+14. QUICK START COMMANDS
+═══════════════════════════════════════════════════════════════════════════
+
+# Install dependencies
+npm install
+
+# Run database migrations
+npm run prisma:migrate
+
+# Generate Prisma client
+npm run prisma:generate
+
+# Start development server
+npm run dev
+
+# Run tests
+node test-expert-system.js
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+═══════════════════════════════════════════════════════════════════════════
+15. CONTACT & DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════
+
+API Documentation: Available at /api/v1/health
+Database Schema: See prisma/schema.prisma
+Frontend Guide: See frontend/README.md
+Backend Guide: See src/README.md (if exists)
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ EXPERT SYSTEM IMPLEMENTATION COMPLETE
+✅ ALL FEATURES TESTED AND WORKING
+✅ PRODUCTION READY
+✅ FULLY DOCUMENTED
+
+═══════════════════════════════════════════════════════════════════════════

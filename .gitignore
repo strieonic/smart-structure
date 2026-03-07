@@ -1,10 +1,26 @@
+# Node
 node_modules/
-dist/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
 .env
-*.log
+
+# macOS
 .DS_Store
-coverage/
-.vscode/
-.idea/
-*.swp
-*.swo
+
+# Logs
+*.log
+
+# Build outputs
+dist/
+build/
+
+# Local archives
+/frontend/archived_unused/
+
+# Ignore secrets
+.env
+**/.env

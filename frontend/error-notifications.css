@@ -1,0 +1,49 @@
+/* ============================================
+   Error Notification System - Styles (Hidden from Main UI)
+   Notifications only visible in site status window
+   ============================================ */
+
+/* AI Suggestion Styling - Used in site status window */
+.ai-suggestion {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  color: white;
+}
+
+.ai-suggestion-header {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-suggestion-header i {
+  font-size: 16px;
+}
+
+.ai-suggestion-content {
+  font-size: 12px;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Responsive - Only for site status window */
+@media (max-width: 768px) {
+  .ai-suggestion {
+    margin: 10px;
+    padding: 10px;
+  }
+  
+  .ai-suggestion-content {
+    font-size: 11px;
+    padding: 8px;
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "summary": {
+    "total": 50,
+    "passed": 29,
+    "failed": 20,
+    "warnings": 1,
+    "successRate": "58.00%",
+    "duration": "4.29s",
+    "startTime": "2026-02-25T13:31:32.942Z",
+    "endTime": "2026-02-25T13:31:37.236Z"
+  },
+  "passed": [
+    {
+      "test": 1,
+      "message": "Backend is running and healthy"
+    },
+    {
+      "test": 2,
+      "message": "Frontend is accessible and serving content"
+    },
+    {
+      "test": 3,
+      "message": "Error Handler monitoring: Backend=running, Frontend=running"
+    },
+    {
+      "test": 4,
+      "message": "Database connection verified"
+    },
+    {
+      "test": 5,
+      "message": "User registration successful"
+    },
+    {
+      "test": 6,
+      "message": "User login successful, token received"
+    },
+    {
+      "test": 7,
+      "message": "Token validation successful"
+    },
+    {
+      "test": 10,
+      "message": "Logout functionality available (client-side)"
+    },
+    {
+      "test": 11,
+      "message": "Land survey created: 11016c22-0dd1-4123-b469-9af25dcee030"
+    },
+    {
+      "test": 12,
+      "message": "Retrieved 1 land surveys"
+    },
+    {
+      "test": 13,
+      "message": "Retrieved specific land survey"
+    },
+    {
+      "test": 14,
+      "message": "Land survey updated successfully"
+    },
+    {
+      "test": 16,
+      "message": "Retrieved 0 building inputs"
+    },
+    {
+      "test": 25,
+      "message": "Retrieved 0 AI projects"
+    },
+    {
+      "test": 30,
+      "message": "Retrieved 0 chat sessions"
+    },
+    {
+      "test": 31,
+      "message": "Chat session retrieved successfully"
+    },
+    {
+      "test": 32,
+      "message": "Expert query posted: 51ed1eb3-a273-47af-a7e0-51f7be83af1b"
+    },
+    {
+      "test": 38,
+      "message": "Retrieved 30 verified experts"
+    },
+    {
+      "test": 39,
+      "message": "GeoJS API working - location detection available"
+    },
+    {
+      "test": 40,
+      "message": "Open-Meteo API working - weather data available"
+    },
+    {
+      "test": 41,
+      "message": "Open-Elevation API working - elevation data available"
+    },
+    {
+      "test": 42,
+      "message": "Nominatim API working - geocoding available"
+    },
+    {
+      "test": 43,
+      "message": "Frontend assets (CSS, JS) loading correctly"
+    },
+    {
+      "test": 44,
+      "message": "Expert interface assets loading correctly"
+    },
+    {
+      "test": 46,
+      "message": "Error notification system assets loaded"
+    },
+    {
+      "test": 47,
+      "message": "Site status page accessible"
+    },
+    {
+      "test": 48,
+      "message": "Error handler notifications API working (0 notifications)"
+    },
+    {
+      "test": 49,
+      "message": "Frontend error reporting working"
+    },
+    {
+      "test": 50,
+      "message": "Status monitoring: Backend=running, Frontend=running"
+    }
+  ],
+  "failed": [
+    {
+      "test": 8,
+      "message": "Expert registration error",
+      "error": "Request failed with status code 400"
+    },
+    {
+      "test": 9,
+      "message": "Expert login error",
+      "error": "Request failed with status code 401"
+    },
+    {
+      "test": 15,
+      "message": "Building input creation error",
+      "error": "Request failed with status code 400"
+    },
+    {
+      "test": 17,
+      "message": "Failed to retrieve specific building input"
+    },
+    {
+      "test": 18,
+      "message": "Wind data addition error",
+      "error": "Request failed with status code 400"
+    },
+    {
+      "test": 19,
+      "message": "Wind data retrieval error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 20,
+      "message": "Disaster analysis error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 21,
+      "message": "Vastu analysis error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 22,
+      "message": "Final report generation error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 23,
+      "message": "Disaster report retrieval error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 24,
+      "message": "AI project creation error",
+      "error": "Request failed with status code 400"
+    },
+    {
+      "test": 26,
+      "message": "AI analysis error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 27,
+      "message": "AI analysis status retrieval error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 28,
+      "message": "Chat session creation error",
+      "error": "Request failed with status code 400"
+    },
+    {
+      "test": 29,
+      "message": "Chat message error",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "test": 33,
+      "message": "Get expert queries error",
+      "error": "Request failed with status code 401"
+    },
+    {
+      "test": 34,
+      "message": "Query assignment error",
+      "error": "Request failed with status code 401"
+    },
+    {
+      "test": 35,
+      "message": "Expert response error",
+      "error": "Request failed with status code 401"
+    },
+    {
+      "test": 37,
+      "message": "Expert profile update error",
+      "error": "Request failed with status code 401"
+    },
+    {
+      "test": 45,
+      "message": "System menu assets error",
+      "error": "Request failed with status code 404"
+    }
+  ],
+  "warnings": [
+    {
+      "test": 36,
+      "message": "Expert profile endpoint may require different path"
+    }
+  ]
+}

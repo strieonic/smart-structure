@@ -10,7 +10,21 @@ datasource db {
 enum UserRole {
   USER
   ENGINEER
+  EXPERT
   ADMIN
+}
+
+enum ExpertType {
+  STRUCTURAL_ENGINEER
+  ARCHITECT
+  CIVIL_ENGINEER
+  GEOTECHNICAL_ENGINEER
+}
+
+enum ExpertStatus {
+  PENDING
+  VERIFIED
+  SUSPENDED
 }
 
 enum SoilType {
@@ -89,6 +103,8 @@ model User {
   
   landSurveys   LandSurvey[]
   auditLogs     AuditLog[]
+  expertProfile ExpertProfile?
+  expertQueries ExpertQuery[]
   
   @@index([email])
   @@map("users")
@@ -174,6 +190,7 @@ model BuildingInput {
   disasterAnalysis    DisasterAnalysis?
   vastuReport         VastuReport?
   finalReport         FinalReport?
+  buildingProject     BuildingProject?
   
   @@index([landSurveyId])
   @@map("building_inputs")
@@ -314,4 +331,300 @@ model FinalReport {
   buildingInput           BuildingInput @relation(fields: [buildingInputId], references: [id], onDelete: Cascade)
   
   @@map("final_reports")
+}
+
+// ============================================
+// AI-POWERED GOVERNMENT RULES SYSTEM
+// ============================================
+
+enum ZoneType {
+  RURAL
+  URBAN
+  SEMI_URBAN
+  INDUSTRIAL
+  AGRICULTURAL
+}
+
+enum RuleCategory {
+  FSI
+  HEIGHT_LIMIT
+  SETBACK
+  BUILDING_SPACING
+  FOUNDATION_DEPTH
+  PARKING
+  FIRE_SAFETY
+  VENTILATION
+  SANITATION
+  ACCESSIBILITY
+}
+
+enum RuleStatus {
+  ACTIVE
+  DEPRECATED
+  PROPOSED
+}
+
+model GovernmentRule {
+  id                String        @id @default(uuid())
+  
+  // Location Specificity
+  country           String        @default("India")
+  state             String        // e.g., "Maharashtra", "Delhi"
+  city              String?       // Optional: specific city
+  zoneType          ZoneType
+  
+  // Rule Details
+  ruleCategory      RuleCategory
+  ruleCode          String        // e.g., "FSI-MH-2023-001"
+  title             String
+  description       String        @db.Text
+  
+  // Conditions & Values
+  conditions        Json          // Conditions when rule applies
+  minValue          Float?
+  maxValue          Float?
+  unit              String?       // meters, percentage, ratio
+  formula           String?       @db.Text
+  
+  // Metadata
+  source            String        // Government body/document
+  sourceUrl         String?
+  effectiveFrom     DateTime
+  effectiveTo       DateTime?
+  status            RuleStatus    @default(ACTIVE)
+  
+  // Timestamps
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // Relations
+  complianceChecks  ComplianceCheck[]
+  
+  @@index([state, city, zoneType, ruleCategory])
+  @@index([status, effectiveFrom])
+  @@map("government_rules")
+}
+
+model LocationData {
+  id                String    @id @default(uuid())
+  
+  // Coordinates
+  latitude          Float
+  longitude         Float
+  
+  // Geocoded Information
+  country           String
+  state             String
+  city              String
+  district          String?
+  pincode           String?
+  locality          String?
+  
+  // Classification
+  zoneType          ZoneType
+  isMetro           Boolean   @default(false)
+  
+  // Administrative
+  municipalWard     String?
+  taluka            String?
+  
+  // Cached Data
+  formattedAddress  String    @db.Text
+  geocodedAt        DateTime  @default(now())
+  
+  // Relations
+  buildingProjects  BuildingProject[]
+  
+  @@index([state, city, zoneType])
+  @@index([latitude, longitude])
+  @@map("location_data")
+}
+
+model BuildingProject {
+  id                    String              @id @default(uuid())
+  userId                String
+  locationId            String
+  buildingInputId       String?             @unique
+  
+  // Project Details
+  projectName           String
+  projectType           BuildingType
+  status                String              @default("DRAFT") // DRAFT, ANALYZING, COMPLETED
+  
+  // AI Analysis
+  aiAnalysisRequested   Boolean             @default(false)
+  aiAnalysisCompleted   Boolean             @default(false)
+  aiAnalysisResult      Json?
+  
+  // Timestamps
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  
+  // Relations
+  location              LocationData        @relation(fields: [locationId], references: [id])
+  buildingInput         BuildingInput?      @relation(fields: [buildingInputId], references: [id])
+  complianceChecks      ComplianceCheck[]
+  chatSessions          ChatSession[]
+  
+  @@index([userId, status])
+  @@index([locationId])
+  @@map("building_projects")
+}
+
+model ComplianceCheck {
+  id                    String          @id @default(uuid())
+  projectId             String
+  ruleId                String
+  
+  // Check Results
+  isCompliant           Boolean
+  actualValue           Float?
+  requiredValue         Float?
+  deviation             Float?          // Percentage deviation
+  
+  // Details
+  checkDetails          Json
+  severity              String          // CRITICAL, HIGH, MEDIUM, LOW
+  recommendation        String          @db.Text
+  
+  // AI Enhancement
+  aiExplanation         String?         @db.Text
+  aiSuggestions         Json?
+  
+  // Timestamps
+  checkedAt             DateTime        @default(now())
+  
+  // Relations
+  project               BuildingProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  rule                  GovernmentRule  @relation(fields: [ruleId], references: [id])
+  
+  @@index([projectId, isCompliant])
+  @@index([ruleId])
+  @@map("compliance_checks")
+}
+
+model ChatSession {
+  id                String        @id @default(uuid())
+  projectId         String
+  userId            String
+  
+  // Session Details
+  sessionTitle      String        @default("New Consultation")
+  isActive          Boolean       @default(true)
+  
+  // Context
+  conversationContext Json        // Stores conversation history
+  
+  // Timestamps
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // Relations
+  project           BuildingProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  messages          ChatMessage[]
+  
+  @@index([projectId, userId])
+  @@index([isActive, updatedAt])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id                String        @id @default(uuid())
+  sessionId         String
+  
+  // Message Details
+  role              String        // user, assistant, system
+  content           String        @db.Text
+  
+  // Metadata
+  tokens            Int?
+  model             String?       // gpt-4, gpt-3.5-turbo, etc.
+  
+  // Context
+  contextData       Json?         // Additional context sent with message
+  
+  // Timestamps
+  createdAt         DateTime      @default(now())
+  
+  // Relations
+  session           ChatSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId, createdAt])
+  @@map("chat_messages")
+}
+
+// ============================================
+// EXPERT SYSTEM MODELS
+// ============================================
+
+model ExpertProfile {
+  id                    String        @id @default(uuid())
+  userId                String        @unique
+  
+  // Professional Details
+  expertType            ExpertType
+  licenseNumber         String
+  experience            String        // "5-10", "10-15", "15-20", "20+"
+  location              String
+  phone                 String
+  
+  // Specializations
+  specializations       Json          // Array of specialization strings
+  summary               String?       @db.Text
+  
+  // Status & Verification
+  status                ExpertStatus  @default(PENDING)
+  verifiedAt            DateTime?
+  verifiedBy            String?
+  
+  // Portfolio
+  portfolioData         Json?         // Portfolio information
+  
+  // Timestamps
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  
+  // Relations
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedQueries       ExpertQuery[]
+  
+  @@index([status, expertType])
+  @@index([location, expertType])
+  @@map("expert_profiles")
+}
+
+model ExpertQuery {
+  id                    String        @id @default(uuid())
+  userId                String        // User who posted the query
+  expertId              String?       // Assigned expert
+  
+  // Query Details
+  title                 String
+  description           String        @db.Text
+  category              String        // "foundation", "seismic", "vastu", etc.
+  priority              String        @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  
+  // Project Context
+  projectId             String?
+  attachments           Json?         // File attachments
+  
+  // Status
+  status                String        @default("OPEN") // OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED
+  
+  // Response
+  expertResponse        String?       @db.Text
+  responseAt            DateTime?
+  
+  // Timestamps
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  
+  // Relations
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expert                ExpertProfile? @relation(fields: [expertId], references: [id])
+  
+  @@index([status, category])
+  @@index([expertId, status])
+  @@index([userId])
+  @@map("expert_queries")
 }

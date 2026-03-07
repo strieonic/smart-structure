@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/auth.controller';
 import { validate } from '../middleware/validation.middleware';
-import { registerSchema, loginSchema } from '../validators/auth.validator';
+import { registerSchema, loginSchema, expertRegisterSchema } from '../validators/auth.validator';
 import { authLimiter } from '../middleware/rateLimit.middleware';
 
 const router = Router();
 const authController = new AuthController();
 
 router.post('/register', authLimiter, validate(registerSchema), authController.register);
+router.post('/register-expert', authLimiter, validate(expertRegisterSchema), authController.registerExpert);
 router.post('/login', authLimiter, validate(loginSchema), authController.login);
 router.post('/refresh', authController.refreshToken);
 

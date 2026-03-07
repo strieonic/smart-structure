@@ -59,6 +59,35 @@ export class BuildingInputController {
     }
   }
 
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const buildingInputs = await prisma.buildingInput.findMany({
+        where: {
+          landSurvey: {
+            userId: req.user!.id,
+          },
+        },
+        include: {
+          landSurvey: true,
+          windData: true,
+          disasterAnalysis: true,
+          vastuReport: true,
+          finalReport: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      res.status(200).json({
+        status: 'success',
+        data: buildingInputs,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;

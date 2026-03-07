@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Your Progress</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0f0f14;
+            color: #e0e0e0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 { color: #8b5cf6; }
+        .status-box {
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .status-box.complete {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .status-box.incomplete {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .status-box.pending {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .icon { font-size: 24px; margin-right: 10px; }
+        .complete .icon { color: #10b981; }
+        .incomplete .icon { color: #ef4444; }
+        .pending .icon { color: #f59e0b; }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover { background: #7c3aed; }
+        .info { color: #9ca3af; font-size: 14px; margin-top: 10px; }
+        .next-step {
+            background: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .next-step h3 { margin-top: 0; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Check Your Progress</h1>
+    <p>This page will check what you've completed and tell you what to do next.</p>
+    
+    <button onclick="checkProgress()">🔄 Check My Progress</button>
+    <button onclick="window.location.href='http://localhost:8080'">🏠 Go to Main App</button>
+    
+    <div id="results"></div>
+
+    <script>
+        async function checkProgress() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Checking your progress...</p>';
+            
+            // Get user data from localStorage
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            const surveyId = localStorage.getItem('surveyId');
+            const buildingId = localStorage.getItem('buildingId');
+            
+            let html = '';
+            let nextStep = '';
+            
+            // Check 1: Logged in?
+            if (token && user) {
+                html += `
+                    <div class="status-box complete">
+                        <span class="icon">✅</span>
+                        <strong>Step 1: Login</strong> - Complete!
+                        <div class="info">Logged in as: ${user.name}</div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="status-box incomplete">
+                        <span class="icon">❌</span>
+                        <strong>Step 1: Login</strong> - Not logged in
+                        <div class="info">Please login first</div>
+                    </div>
+                `;
+                nextStep = 'login';
+            }
+            
+            // Check 2: Land Survey created?
+            if (surveyId) {
+                html += `
+                    <div class="status-box complete">
+                        <span class="icon">✅</span>
+                        <strong>Step 2: Land Survey</strong> - Complete!
+                        <div class="info">Survey ID: ${surveyId.substring(0, 8)}...</div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="status-box ${token ? 'incomplete' : 'pending'}">
+                        <span class="icon">${token ? '❌' : '⏸️'}</span>
+                        <strong>Step 2: Land Survey</strong> - ${token ? 'Not created' : 'Pending login'}
+                        <div class="info">Go to Land Survey section and create one</div>
+                    </div>
+                `;
+                if (!nextStep && token) nextStep = 'survey';
+            }
+            
+            // Check 3: Building Input created?
+            if (buildingId) {
+                html += `
+                    <div class="status-box complete">
+                        <span class="icon">✅</span>
+                        <strong>Step 3: Building Input</strong> - Complete!
+                        <div class="info">Building ID: ${buildingId.substring(0, 8)}...</div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="status-box ${surveyId ? 'incomplete' : 'pending'}">
+                        <span class="icon">${surveyId ? '❌' : '⏸️'}</span>
+                        <strong>Step 3: Building Input</strong> - ${surveyId ? 'Not created' : 'Pending survey'}
+                        <div class="info">Go to Building Input section and create one</div>
+                    </div>
+                `;
+                if (!nextStep && surveyId) nextStep = 'building';
+            }
+            
+            // Check 4: Wind Data (can't check from localStorage, assume pending)
+            html += `
+                <div class="status-box ${buildingId ? 'pending' : 'pending'}">
+                    <span class="icon">⏸️</span>
+                    <strong>Step 4: Wind Data</strong> - ${buildingId ? 'Please verify' : 'Pending building'}
+                    <div class="info">Go to Wind Data section and add wind data</div>
+                </div>
+            `;
+            if (!nextStep && buildingId) nextStep = 'wind';
+            
+            // Check 5: Analysis
+            html += `
+                <div class="status-box pending">
+                    <span class="icon">⏸️</span>
+                    <strong>Step 5: Run Analysis</strong> - Pending
+                    <div class="info">Go to Analysis section and run analyses</div>
+                </div>
+            `;
+            if (!nextStep && buildingId) nextStep = 'analysis';
+            
+            // Check 6: Reports
+            html += `
+                <div class="status-box pending">
+                    <span class="icon">⏸️</span>
+                    <strong>Step 6: View Reports</strong> - Pending analysis
+                    <div class="info">After running analysis, go to Reports section</div>
+                </div>
+            `;
+            
+            // Add next step recommendation
+            if (nextStep) {
+                const steps = {
+                    'login': {
+                        title: 'Login to Your Account',
+                        description: 'Click the button below to go to the main app and login.',
+                        action: 'Go to Login'
+                    },
+                    'survey': {
+                        title: 'Create a Land Survey',
+                        description: 'Go to the Land Survey section and fill in the location and soil details.',
+                        action: 'Go to Land Survey'
+                    },
+                    'building': {
+                        title: 'Create a Building Input',
+                        description: 'Go to the Building Input section and enter your building details.',
+                        action: 'Go to Building Input'
+                    },
+                    'wind': {
+                        title: 'Add Wind Data',
+                        description: 'Go to the Wind Data section and use the auto-fill feature or enter manually.',
+                        action: 'Go to Wind Data'
+                    },
+                    'analysis': {
+                        title: 'Run Analysis',
+                        description: 'Go to the Analysis section and run Disaster, Vastu, or Final Report analysis.',
+                        action: 'Go to Analysis'
+                    }
+                };
+                
+                const step = steps[nextStep];
+                html += `
+                    <div class="next-step">
+                        <h3>📍 Next Step: ${step.title}</h3>
+                        <p>${step.description}</p>
+                        <button onclick="window.location.href='http://localhost:8080'">${step.action}</button>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="next-step">
+                        <h3>🎉 You're All Set!</h3>
+                        <p>You've completed the basic setup. Now run the analyses and view your reports!</p>
+                        <button onclick="window.location.href='http://localhost:8080'">Go to Main App</button>
+                    </div>
+                `;
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', checkProgress);
+    </script>
+</body>
+</html>
